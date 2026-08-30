@@ -182,6 +182,7 @@ export default function Home() {
             <img
               src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=1500w"
               alt="CAT 320CL excavator in Gordon Machinery Solutions' equipment yard"
+              fetchPriority="high"
             />
             <figcaption>
               <span>Ready for the job</span>
@@ -218,7 +219,7 @@ export default function Home() {
           <div className="inventory-grid">
             {inventory.map((item) => (
               <a className="equipment-card" href={item.href} target="_blank" rel="noreferrer" key={item.title}>
-                <div className="card-image"><img src={item.image} alt={item.alt} /></div>
+                <div className="card-image"><img src={item.image} alt={item.alt} loading="lazy" /></div>
                 <div className="card-body">
                   <span className="category-label">{item.category}</span>
                   <h3>{item.title}</h3>
@@ -254,6 +255,7 @@ export default function Home() {
             <img
               src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558555025423-4S4QOJNHAC4Q5974GOF3/cat.png?format=1500w"
               alt="CAT 320C excavator in Gordon Machinery Solutions' equipment yard"
+              loading="lazy"
             />
             <figcaption>Equipment selected for real-world work.</figcaption>
           </figure>
@@ -285,6 +287,7 @@ export default function Home() {
             <img
               src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558546181171-881IF7O9MBGS55ZESNNG/jcb3cxbackhoe.png?format=1500w"
               alt="2017 JCB 3CX backhoe loader available from Gordon Machinery Solutions"
+              loading="lazy"
             />
           </figure>
           <div className="rentals-copy">
