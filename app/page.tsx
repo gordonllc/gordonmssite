@@ -274,8 +274,8 @@ export default function Home() {
               <strong>We sell what we own.</strong>
               <span>Our inventory is company-owned—not brokered—so buyers know exactly who stands behind the sale.</span>
             </blockquote>
-            <a className="text-link" href="https://www.gordonmachinerysolutions.com/about-us" target="_blank" rel="noreferrer">
-              Learn More About Gordon <ArrowRight size={17} aria-hidden="true" />
+            <a className="text-link" href="#contact">
+              Talk With Gordon <ArrowRight size={17} aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -299,7 +299,7 @@ export default function Home() {
               <li><Check size={18} aria-hidden="true" /> Long-term rental</li>
               <li><Check size={18} aria-hidden="true" /> Rental purchase options</li>
             </ul>
-            <a className="button" href="https://www.gordonmachinerysolutions.com/equipment-rentals" target="_blank" rel="noreferrer">
+            <a className="button" href="/equipment?availability=Rental%20Available">
               View Rentals <ArrowRight size={17} aria-hidden="true" />
             </a>
           </div>
@@ -325,8 +325,8 @@ export default function Home() {
               <p>Ask about financing options available for qualifying equipment purchases, including transportation costs.</p>
             </div>
           </div>
-          <a className="text-link" href="https://www.gordonmachinerysolutions.com/financing" target="_blank" rel="noreferrer">
-            Financing Information <ArrowRight size={17} aria-hidden="true" />
+          <a className="text-link" href="#contact">
+            Ask About Financing <ArrowRight size={17} aria-hidden="true" />
           </a>
         </div>
       </section>

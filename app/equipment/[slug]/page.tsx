@@ -96,6 +96,7 @@ export default async function EquipmentDetailPage({
               </div>
               <span className="category-label">{item.category}</span>
               <h1>{item.title}</h1>
+              <span className="price-kicker">Listed price</span>
               <strong className="detail-price">{item.priceLabel}</strong>
               <p className="detail-intro">{item.description}</p>
 
@@ -138,6 +139,20 @@ export default async function EquipmentDetailPage({
           <div><Check size={18} aria-hidden="true" /><span>Inspection support available</span></div>
           <div><Check size={18} aria-hidden="true" /><span>Transportation coordination</span></div>
           <div><CircleDollarSign size={18} aria-hidden="true" /><span>Ask about financing options</span></div>
+        </div>
+      </section>
+
+      <section className="equipment-process">
+        <div className="container">
+          <div className="process-heading">
+            <div><p className="eyebrow">What Happens Next</p><h2>A Straightforward Equipment Process</h2></div>
+            <p>No broker handoff and no maze of forms. You work directly with Gordon from the first question through pickup or delivery.</p>
+          </div>
+          <div className="process-grid">
+            <div><span>01</span><h3>Talk With Gordon</h3><p>Tell us about the machine, the job and your timeline.</p></div>
+            <div><span>02</span><h3>Review the Equipment</h3><p>Request current details, additional photos or inspection support.</p></div>
+            <div><span>03</span><h3>Plan the Next Step</h3><p>Coordinate the purchase or rental, financing and transportation.</p></div>
+          </div>
         </div>
       </section>
 

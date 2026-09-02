@@ -21,18 +21,21 @@ export const metadata: Metadata = {
 export default async function EquipmentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; availability?: string }>;
 }) {
   const params = await searchParams;
   const requested = params.category;
   const initialCategory = requested && equipmentCategories.includes(requested)
     ? requested
     : 'All Equipment';
+  const initialAvailability = params.availability === 'Rental Available' || params.availability === 'For Sale'
+    ? params.availability
+    : 'All Availability';
 
   return (
     <main id="top">
       <SiteHeader active="inventory" />
-      <CatalogClient initialCategory={initialCategory} />
+      <CatalogClient initialCategory={initialCategory} initialAvailability={initialAvailability} />
       <SiteFooter />
     </main>
   );
