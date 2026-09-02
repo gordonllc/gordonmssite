@@ -131,8 +131,8 @@ export default async function EquipmentDetailPage({
           </div>
         </div>
         <div className="container detail-benefits">
-          <div><Check size={18} aria-hidden="true" /><span>Equipment inspection support</span></div>
-          <div><Check size={18} aria-hidden="true" /><span>Inspection support available</span></div>
+          <div><Check size={18} aria-hidden="true" /><span>Additional photos available</span></div>
+          <div><Check size={18} aria-hidden="true" /><span>Inspection coordination</span></div>
           <div><Check size={18} aria-hidden="true" /><span>Transportation coordination</span></div>
           <div><CircleDollarSign size={18} aria-hidden="true" /><span>Ask about financing options</span></div>
         </div>

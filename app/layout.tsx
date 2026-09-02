@@ -29,20 +29,20 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: 'Gordon Machinery Solutions',
-    title: 'Heavy Equipment You Can Count On.',
+    title: 'Used Heavy Equipment for Sale and Rent.',
     description: 'Sales, rentals and equipment sourcing for contractors throughout Atlanta and beyond.',
     images: [
       {
         url: '/og.png',
         width: 1200,
         height: 630,
-        alt: 'Heavy Equipment You Can Count On — Sales, Rentals, Equipment Sourcing',
+        alt: 'Gordon Machinery Solutions — Sales, Rentals and Equipment Sourcing',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Heavy Equipment You Can Count On.',
+    title: 'Used Heavy Equipment for Sale and Rent.',
     description: 'Sales, rentals and equipment sourcing for contractors throughout Atlanta and beyond.',
     images: ['/og.png'],
   },

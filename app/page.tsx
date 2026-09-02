@@ -138,7 +138,7 @@ export default function Home() {
       <div className="utility-bar">
         <div className="container utility-content">
           <span>Heavy Equipment Sales &amp; Rentals <i /> Atlanta, Georgia</span>
-          <span>Serving contractors for more than 10 years</span>
+          <span>Mon–Fri 8:00 AM–5:00 PM</span>
         </div>
       </div>
 
@@ -185,7 +185,7 @@ export default function Home() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">Heavy Equipment Sales &amp; Rentals</p>
-            <h1>Heavy Equipment for the Work Ahead.</h1>
+            <h1>Used Heavy Equipment for Sale and Rent.</h1>
             <p className="hero-lede">
               Quality used construction equipment, rentals and equipment sourcing for
               contractors throughout Atlanta and beyond.
@@ -215,7 +215,7 @@ export default function Home() {
         <div className="container trust-grid">
           {trustItems.map(({ icon: Icon, title, copy }) => (
             <div className="trust-item" key={title}>
-              <Icon size={25} strokeWidth={1.8} aria-hidden="true" />
+              <span className="trust-icon"><Icon size={21} strokeWidth={1.8} aria-hidden="true" /></span>
               <div><strong>{title}</strong><span>{copy}</span></div>
             </div>
           ))}
@@ -226,7 +226,7 @@ export default function Home() {
         <div className="container">
           <div className="section-heading-row">
             <div>
-              <p className="eyebrow">AVAILABLE NOW</p>
+              <p className="eyebrow">Current Inventory</p>
               <h2>Featured Equipment</h2>
               <p>Browse a selection of used construction and landscaping equipment.</p>
             </div>
@@ -259,8 +259,9 @@ export default function Home() {
             <div className="category-grid">
               {categories.map(({ label, filter, icon: Icon }) => (
                 <a href={filter ? `/equipment?category=${encodeURIComponent(filter)}` : '/equipment'} className="category-tile" key={label}>
-                  <Icon size={27} strokeWidth={1.6} aria-hidden="true" />
+                  <span className="category-icon"><Icon size={24} strokeWidth={1.6} aria-hidden="true" /></span>
                   <span>{label}</span>
+                  <ArrowRight className="category-arrow" size={17} aria-hidden="true" />
                 </a>
               ))}
             </div>
@@ -311,7 +312,7 @@ export default function Home() {
           </figure>
           <div className="rentals-copy">
             <p className="eyebrow">Equipment Rentals</p>
-            <h2>Flexible Rentals for the Job Ahead</h2>
+            <h2>Short- and Long-Term Equipment Rentals</h2>
             <p>Short-term, long-term and rental-purchase options are available for qualifying equipment.</p>
             <ul>
               <li><Check size={18} aria-hidden="true" /> Short-term rental</li>
@@ -327,11 +328,13 @@ export default function Home() {
 
       <section className="section sourcing-section">
         <div className="container sourcing-inner">
-          <Search size={32} strokeWidth={1.7} aria-hidden="true" />
-          <p className="eyebrow">Looking for something specific?</p>
-          <h2>Tell Us What Equipment You Need.</h2>
-          <p>If the machine you&apos;re looking for isn&apos;t currently in our inventory, our team can help source it.</p>
-          <a className="button" href="#contact">Request Equipment</a>
+          <span className="sourcing-icon"><Search size={27} strokeWidth={1.7} aria-hidden="true" /></span>
+          <div className="sourcing-copy">
+            <p className="eyebrow">Equipment Sourcing</p>
+            <h2>Looking for a Specific Machine?</h2>
+            <p>If it isn&apos;t in our current inventory, tell us what you need and we&apos;ll help locate it.</p>
+          </div>
+          <a className="button" href="#contact">Request Equipment <ArrowRight size={17} aria-hidden="true" /></a>
         </div>
       </section>
 
@@ -340,6 +343,7 @@ export default function Home() {
           <div className="financing-copy">
             <span className="finance-icon"><CircleDollarSign size={28} strokeWidth={1.7} aria-hidden="true" /></span>
             <div>
+              <span className="financing-label">Financing Options</span>
               <h2>Need Financing?</h2>
               <p>Ask about financing options available for qualifying equipment purchases, including transportation costs.</p>
             </div>

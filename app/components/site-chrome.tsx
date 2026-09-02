@@ -31,7 +31,7 @@ export function SiteHeader({ active = '' }: { active?: string }) {
       <div className="utility-bar">
         <div className="container utility-content">
           <span>Heavy Equipment Sales &amp; Rentals <i /> Atlanta, Georgia</span>
-          <span>Serving contractors for more than 10 years</span>
+          <span>Mon–Fri 8:00 AM–5:00 PM</span>
         </div>
       </div>
       <header className="site-header">

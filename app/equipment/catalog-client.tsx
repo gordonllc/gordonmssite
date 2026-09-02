@@ -70,11 +70,11 @@ export default function CatalogClient({
           <div className="equipment-hero-copy">
             <p className="breadcrumbs"><a href="/">Home</a><span>/</span>Equipment</p>
             <p className="eyebrow">Equipment Inventory</p>
-            <h1>Find the Right Machine for the Work Ahead.</h1>
+            <h1>Browse Equipment for Sale and Rent.</h1>
             <p>Browse used construction and landscaping equipment available for sale and rent in the Atlanta area.</p>
             <div className="equipment-hero-facts" aria-label="Inventory benefits">
               <div><strong>{items.length}</strong><span>Current listings</span></div>
-              <div><strong>Sale + Rental</strong><span>Flexible options</span></div>
+              <div><strong>Buy / Rent</strong><span>Flexible options</span></div>
               <div><strong>Atlanta</strong><span>Metro area</span></div>
             </div>
           </div>
