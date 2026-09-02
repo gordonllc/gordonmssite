@@ -9,12 +9,14 @@ export type EquipmentItem = {
   priceLabel: string;
   hours: number | null;
   availability: 'For Sale' | 'Rental Available';
-  status: 'Available';
+  status: 'Available' | 'Pending' | 'Sold' | 'Rented';
   image: string;
   alternateImage?: string;
   alt: string;
   description: string;
   featured?: boolean;
+  published?: boolean;
+  sortOrder?: number;
 };
 
 export const equipment: EquipmentItem[] = [

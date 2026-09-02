@@ -13,14 +13,16 @@ import {
   SlidersHorizontal,
   Wrench,
 } from 'lucide-react';
-import { equipment, equipmentCategories } from '../data/equipment';
+import type { EquipmentItem } from '../data/equipment';
 
 type SortOption = 'featured' | 'newest' | 'price-low' | 'price-high';
 
 export default function CatalogClient({
+  items,
   initialCategory,
   initialAvailability,
 }: {
+  items: EquipmentItem[];
   initialCategory: string;
   initialAvailability: string;
 }) {
@@ -31,7 +33,7 @@ export default function CatalogClient({
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const filtered = equipment.filter((item) => {
+    const filtered = items.filter((item) => {
       const matchesQuery = !normalized || [item.title, item.make, item.model, item.category]
         .join(' ')
         .toLowerCase()
@@ -47,7 +49,12 @@ export default function CatalogClient({
       if (sort === 'price-high') return b.price - a.price;
       return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
     });
-  }, [query, category, availability, sort]);
+  }, [query, category, availability, sort, items]);
+
+  const equipmentCategories = useMemo(
+    () => ['All Equipment', ...Array.from(new Set(items.map((item) => item.category))).sort()],
+    [items],
+  );
 
   function resetFilters() {
     setQuery('');
@@ -66,7 +73,7 @@ export default function CatalogClient({
             <h1>Find the Right Machine for the Work Ahead.</h1>
             <p>Browse used construction and landscaping equipment available for sale and rent in the Atlanta area.</p>
             <div className="equipment-hero-facts" aria-label="Inventory benefits">
-              <div><strong>6</strong><span>Current listings</span></div>
+              <div><strong>{items.length}</strong><span>Current listings</span></div>
               <div><strong>Sale + Rental</strong><span>Flexible options</span></div>
               <div><strong>Atlanta</strong><span>Metro area</span></div>
             </div>
@@ -147,7 +154,7 @@ export default function CatalogClient({
                 <article className="catalog-card" key={item.slug}>
                   <a className="catalog-card-image" href={`/equipment/${item.slug}`} aria-label={`View ${item.title}`}>
                     <img src={item.image} alt={item.alt} loading="lazy" />
-                    <span className="status-badge"><BadgeCheck size={14} aria-hidden="true" /> {item.status}</span>
+                    <span className={`status-badge status-${item.status.toLowerCase()}`}><BadgeCheck size={14} aria-hidden="true" /> {item.status}</span>
                     {item.availability === 'Rental Available' && <span className="rental-badge">Rental Available</span>}
                   </a>
                   <div className="catalog-card-body">

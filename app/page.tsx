@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
   Award,
@@ -23,6 +23,7 @@ import {
   Wrench,
   X,
 } from 'lucide-react';
+import type { EquipmentItem } from './data/equipment';
 
 const trustItems = [
   { icon: Award, title: '10+ Years Experience', copy: 'Serving contractors across Georgia' },
@@ -31,7 +32,7 @@ const trustItems = [
   { icon: Search, title: 'Equipment Sourcing', copy: 'We help locate the right machine' },
 ];
 
-const inventory = [
+const fallbackInventory = [
   {
     category: 'BACKHOE LOADER',
     title: '2013 Deere Backhoe Loader',
@@ -92,6 +93,28 @@ function Logo() {
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [homeInventory, setHomeInventory] = useState(fallbackInventory);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/equipment?featured=1&limit=3')
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((data) => {
+        const { items } = data as { items: EquipmentItem[] };
+        if (!active || !Array.isArray(items) || !items.length) return;
+        setHomeInventory(items.map((item) => ({
+          category: String(item.category).toUpperCase(),
+          title: item.title,
+          details: item.hours ? `${Number(item.hours).toLocaleString()} hours` : item.availability,
+          price: item.priceLabel,
+          image: item.image,
+          alt: item.alt,
+          href: `/equipment/${item.slug}`,
+        })));
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
 
   function submitInquiry(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -213,7 +236,7 @@ export default function Home() {
           </div>
 
           <div className="inventory-grid">
-            {inventory.map((item) => (
+            {homeInventory.map((item) => (
               <a className="equipment-card" href={item.href} key={item.title}>
                 <div className="card-image"><img src={item.image} alt={item.alt} loading="lazy" /></div>
                 <div className="card-body">

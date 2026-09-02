@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { equipmentCategories } from '../data/equipment';
 import { SiteFooter, SiteHeader } from '../components/site-chrome';
+import { listEquipment } from '../../db/equipment';
 import CatalogClient from './catalog-client';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Equipment Inventory | Gordon Machinery Solutions',
@@ -24,6 +26,8 @@ export default async function EquipmentPage({
   searchParams: Promise<{ category?: string; availability?: string }>;
 }) {
   const params = await searchParams;
+  const items = await listEquipment();
+  const equipmentCategories = ['All Equipment', ...Array.from(new Set(items.map((item) => item.category)))];
   const requested = params.category;
   const initialCategory = requested && equipmentCategories.includes(requested)
     ? requested
@@ -35,7 +39,7 @@ export default async function EquipmentPage({
   return (
     <main id="top">
       <SiteHeader active="inventory" />
-      <CatalogClient initialCategory={initialCategory} initialAvailability={initialAvailability} />
+      <CatalogClient items={items} initialCategory={initialCategory} initialAvailability={initialAvailability} />
       <SiteFooter />
     </main>
   );

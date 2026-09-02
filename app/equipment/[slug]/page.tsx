@@ -11,12 +11,10 @@ import {
   MapPin,
   Phone,
 } from 'lucide-react';
-import { equipment, getEquipment } from '../../data/equipment';
 import { SiteFooter, SiteHeader } from '../../components/site-chrome';
+import { getEquipmentRecord, listEquipment } from '../../../db/equipment';
 
-export function generateStaticParams() {
-  return equipment.map((item) => ({ slug: item.slug }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
@@ -24,7 +22,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const item = getEquipment(slug);
+  const item = await getEquipmentRecord(slug);
   if (!item) return { title: 'Equipment Not Found | Gordon Machinery Solutions' };
 
   const description = `${item.title} listed at ${item.priceLabel}${item.hours ? ` with ${item.hours.toLocaleString()} hours` : ''}. View details and contact Gordon Machinery Solutions.`;
@@ -54,10 +52,10 @@ export default async function EquipmentDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = getEquipment(slug);
+  const item = await getEquipmentRecord(slug);
   if (!item) notFound();
 
-  const related = equipment
+  const related = (await listEquipment())
     .filter((candidate) => candidate.slug !== item.slug)
     .sort((a, b) => Number(b.category === item.category) - Number(a.category === item.category))
     .slice(0, 3);
@@ -89,7 +87,7 @@ export default async function EquipmentDetailPage({
 
             <aside className="detail-summary">
               <div className="detail-badges">
-                <span className="status-badge static"><BadgeCheck size={14} aria-hidden="true" /> {item.status}</span>
+                <span className={`status-badge static status-${item.status.toLowerCase()}`}><BadgeCheck size={14} aria-hidden="true" /> {item.status}</span>
                 {item.availability === 'Rental Available' && <span className="rental-badge static">Rental Available</span>}
               </div>
               <span className="category-label">{item.category}</span>
@@ -106,7 +104,7 @@ export default async function EquipmentDetailPage({
               </div>
 
               <div className="detail-actions">
-                <a className="button" href="/#contact">Request Information <ArrowRight size={17} aria-hidden="true" /></a>
+                <a className="button" href="/#contact">{item.status === 'Sold' || item.status === 'Rented' ? 'Ask About Similar Equipment' : 'Request Information'} <ArrowRight size={17} aria-hidden="true" /></a>
                 <a className="button button-outline" href="tel:+17707695281"><Phone size={17} aria-hidden="true" /> Call 770-769-5281</a>
               </div>
               <p className="detail-note">Availability, hours and pricing may change. Contact Gordon to confirm current details.</p>
