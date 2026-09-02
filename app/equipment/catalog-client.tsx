@@ -10,8 +10,8 @@ import {
   MapPin,
   Phone,
   Search,
-  ShieldCheck,
   SlidersHorizontal,
+  Wrench,
 } from 'lucide-react';
 import { equipment, equipmentCategories } from '../data/equipment';
 
@@ -62,13 +62,13 @@ export default function CatalogClient({
         <div className="container equipment-hero-inner">
           <div className="equipment-hero-copy">
             <p className="breadcrumbs"><a href="/">Home</a><span>/</span>Equipment</p>
-            <p className="eyebrow">Company-Owned Inventory</p>
+            <p className="eyebrow">Equipment Inventory</p>
             <h1>Find the Right Machine for the Work Ahead.</h1>
-            <p>Browse equipment for sale and rent from Gordon. Clear pricing, real machine photography and direct access to a team that knows the inventory.</p>
+            <p>Browse used construction and landscaping equipment available for sale and rent in the Atlanta area.</p>
             <div className="equipment-hero-facts" aria-label="Inventory benefits">
-              <div><strong>6</strong><span>Machines listed</span></div>
-              <div><strong>100%</strong><span>Company-owned</span></div>
-              <div><strong>10+ yrs</strong><span>Equipment experience</span></div>
+              <div><strong>6</strong><span>Current listings</span></div>
+              <div><strong>Sale + Rental</strong><span>Flexible options</span></div>
+              <div><strong>Atlanta</strong><span>Metro area</span></div>
             </div>
           </div>
           <figure className="equipment-hero-photo">
@@ -77,14 +77,13 @@ export default function CatalogClient({
               alt="CAT 320CL in Gordon Machinery Solutions' equipment yard"
               fetchPriority="high"
             />
-            <figcaption><ShieldCheck size={18} aria-hidden="true" /><span><strong>We sell what we own.</strong> Direct answers from the Gordon team.</span></figcaption>
           </figure>
         </div>
       </section>
 
       <section className="inventory-desk-strip" aria-label="Gordon equipment desk contact information">
         <div className="container inventory-desk-inner">
-          <div className="desk-title"><span><ShieldCheck size={20} aria-hidden="true" /></span><div><strong>Gordon Equipment Desk</strong><small>Talk directly with the team that manages the machines.</small></div></div>
+          <div className="desk-title"><span><Wrench size={20} aria-hidden="true" /></span><div><strong>Gordon Equipment Desk</strong><small>Sales, rentals and equipment sourcing.</small></div></div>
           <a href="tel:+17707695281"><Phone size={18} aria-hidden="true" /><span><small>CALL SALES</small><strong>770-769-5281</strong></span></a>
           <a href="mailto:Sales@GordonMachinerySolutions.com"><Mail size={18} aria-hidden="true" /><span><small>EMAIL</small><strong>Sales@GordonMachinerySolutions.com</strong></span></a>
           <div><MapPin size={18} aria-hidden="true" /><span><small>LOCATION</small><strong>Smyrna, Georgia</strong></span></div>
@@ -95,7 +94,7 @@ export default function CatalogClient({
         <div className="container">
           <div className="catalog-heading">
             <div><p className="eyebrow">Current Inventory</p><h2>Equipment Available Now</h2></div>
-            <p>Real photos, clear public pricing and direct access to Gordon for current machine details.</p>
+            <p>Browse by machine type, availability or price.</p>
           </div>
           <div className="catalog-toolbar">
             <label className="catalog-search">
@@ -154,7 +153,6 @@ export default function CatalogClient({
                   <div className="catalog-card-body">
                     <span className="category-label">{item.category}</span>
                     <h2><a href={`/equipment/${item.slug}`}>{item.title}</a></h2>
-                    <span className="ownership-line"><ShieldCheck size={14} aria-hidden="true" /> Listed directly by Gordon</span>
                     <div className="catalog-specs">
                       <span><CalendarDays size={15} aria-hidden="true" /> {item.year}</span>
                       <span><Gauge size={15} aria-hidden="true" /> {item.hours ? `${item.hours.toLocaleString()} hours` : 'Hours on request'}</span>

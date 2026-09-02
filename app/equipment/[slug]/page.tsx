@@ -10,7 +10,6 @@ import {
   Gauge,
   MapPin,
   Phone,
-  ShieldCheck,
 } from 'lucide-react';
 import { equipment, getEquipment } from '../../data/equipment';
 import { SiteFooter, SiteHeader } from '../../components/site-chrome';
@@ -80,7 +79,6 @@ export default async function EquipmentDetailPage({
             <div className="detail-gallery">
               <figure className="detail-main-image">
                 <img src={item.image} alt={item.alt} fetchPriority="high" />
-                <span>Actual Gordon inventory photo</span>
               </figure>
               {item.alternateImage && (
                 <figure className="detail-secondary-image">
@@ -103,7 +101,7 @@ export default async function EquipmentDetailPage({
               <div className="detail-quick-specs">
                 <div><CalendarDays size={18} aria-hidden="true" /><span>Year<strong>{item.year}</strong></span></div>
                 <div><Gauge size={18} aria-hidden="true" /><span>Hours<strong>{item.hours ? item.hours.toLocaleString() : 'On request'}</strong></span></div>
-                <div><ShieldCheck size={18} aria-hidden="true" /><span>Ownership<strong>Company-owned</strong></span></div>
+                <div><BadgeCheck size={18} aria-hidden="true" /><span>Seller<strong>Gordon Machinery</strong></span></div>
                 <div><MapPin size={18} aria-hidden="true" /><span>Location<strong>Smyrna, Georgia</strong></span></div>
               </div>
 
@@ -121,7 +119,7 @@ export default async function EquipmentDetailPage({
         <div className="container detail-info-grid">
           <div>
             <p className="eyebrow">Machine Details</p>
-            <h2>Straightforward Information. Direct Support.</h2>
+            <h2>Machine Overview</h2>
             <p>{item.description}</p>
             <p>Gordon can provide additional photos, arrange an inspection and help coordinate transportation based on your location and timeline.</p>
           </div>
@@ -135,7 +133,7 @@ export default async function EquipmentDetailPage({
           </div>
         </div>
         <div className="container detail-benefits">
-          <div><Check size={18} aria-hidden="true" /><span><strong>Company-owned</strong> equipment</span></div>
+          <div><Check size={18} aria-hidden="true" /><span>Equipment inspection support</span></div>
           <div><Check size={18} aria-hidden="true" /><span>Inspection support available</span></div>
           <div><Check size={18} aria-hidden="true" /><span>Transportation coordination</span></div>
           <div><CircleDollarSign size={18} aria-hidden="true" /><span>Ask about financing options</span></div>
@@ -145,8 +143,8 @@ export default async function EquipmentDetailPage({
       <section className="equipment-process">
         <div className="container">
           <div className="process-heading">
-            <div><p className="eyebrow">What Happens Next</p><h2>A Straightforward Equipment Process</h2></div>
-            <p>No broker handoff and no maze of forms. You work directly with Gordon from the first question through pickup or delivery.</p>
+            <div><p className="eyebrow">What Happens Next</p><h2>From Inquiry to Delivery</h2></div>
+            <p>From the first question through inspection and transport, our team helps coordinate the details.</p>
           </div>
           <div className="process-grid">
             <div><span>01</span><h3>Talk With Gordon</h3><p>Tell us about the machine, the job and your timeline.</p></div>

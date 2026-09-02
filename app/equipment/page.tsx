@@ -5,16 +5,16 @@ import CatalogClient from './catalog-client';
 
 export const metadata: Metadata = {
   title: 'Equipment Inventory | Gordon Machinery Solutions',
-  description: 'Browse company-owned excavators, backhoe loaders, stump grinders and rental-ready equipment available from Gordon Machinery Solutions.',
+  description: 'Browse excavators, backhoe loaders, stump grinders and rental-ready equipment available from Gordon Machinery Solutions.',
   alternates: { canonical: '/equipment' },
   openGraph: {
     title: 'Equipment Inventory | Gordon Machinery Solutions',
-    description: 'Browse company-owned heavy equipment for sale and rent in the Atlanta area.',
+    description: 'Browse heavy equipment for sale and rent in the Atlanta area.',
     url: '/equipment',
   },
   twitter: {
     title: 'Equipment Inventory | Gordon Machinery Solutions',
-    description: 'Browse company-owned heavy equipment for sale and rent in the Atlanta area.',
+    description: 'Browse heavy equipment for sale and rent in the Atlanta area.',
   },
 };
 

@@ -32,7 +32,7 @@ export const equipment: EquipmentItem[] = [
     status: 'Available',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558558381333-FVAAMBRD0BRH0JP8HEOE/deere2.png?format=1500w',
     alt: '2013 Deere backhoe loader owned by Gordon Machinery Solutions',
-    description: 'A company-owned Deere backhoe loader ready for inspection. Contact Gordon for a current condition report, transportation options and additional machine details.',
+    description: 'A Deere backhoe loader available for inspection. Contact Gordon for a current condition report, transportation options and additional machine details.',
     featured: true,
   },
   {
@@ -50,7 +50,7 @@ export const equipment: EquipmentItem[] = [
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020594540-9RPIF3KW0DD7H754MNY6/img+7.jpeg?format=1500w',
     alternateImage: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020592861-6E5Y7O6QC9UYRY7VTP3D/img+%282%29.jpeg?format=1500w',
     alt: '2022 Vermeer SC70TX stump grinder owned by Gordon Machinery Solutions',
-    description: 'A low-hour, company-owned Vermeer stump grinder presented with clear pricing and available for inspection. Ask the Gordon team about financing and delivery.',
+    description: 'A low-hour Vermeer stump grinder with clear pricing and inspection availability. Ask the Gordon team about financing and delivery.',
     featured: true,
   },
   {
@@ -100,7 +100,7 @@ export const equipment: EquipmentItem[] = [
     status: 'Available',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=1500w',
     alt: 'CAT 320CL excavator in Gordon Machinery Solutions equipment yard',
-    description: 'A company-owned CAT 320CL excavator with public hours and pricing listed clearly. Contact the team for inspection availability, financing and transportation support.',
+    description: 'A CAT 320CL excavator with hours and pricing listed. Contact the team for inspection availability, financing and transportation support.',
   },
   {
     slug: '2017-jcb-3cx-backhoe-loader',

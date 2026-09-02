@@ -26,7 +26,7 @@ import {
 
 const trustItems = [
   { icon: Award, title: '10+ Years Experience', copy: 'Serving contractors across Georgia' },
-  { icon: BadgeCheck, title: 'Company-Owned Equipment', copy: 'Know exactly who you are buying from' },
+  { icon: BadgeCheck, title: 'Used Equipment Inventory', copy: 'Excavators, backhoes, grinders and more' },
   { icon: CalendarClock, title: 'Short & Long-Term Rentals', copy: 'Flexible terms for the job ahead' },
   { icon: Search, title: 'Equipment Sourcing', copy: 'We help locate the right machine' },
 ];
@@ -35,7 +35,7 @@ const inventory = [
   {
     category: 'BACKHOE LOADER',
     title: '2013 Deere Backhoe Loader',
-    details: 'Company-owned used equipment',
+    details: 'Available now',
     price: '$75,000',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558558381333-FVAAMBRD0BRH0JP8HEOE/deere2.png?format=1500w',
     alt: '2013 Deere backhoe loader owned by Gordon Machinery Solutions',
@@ -162,7 +162,7 @@ export default function Home() {
         <div className="container hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">Heavy Equipment Sales &amp; Rentals</p>
-            <h1>Heavy Equipment You Can Count On.</h1>
+            <h1>Heavy Equipment for the Work Ahead.</h1>
             <p className="hero-lede">
               Quality used construction equipment, rentals and equipment sourcing for
               contractors throughout Atlanta and beyond.
@@ -172,9 +172,9 @@ export default function Home() {
               <a className="button button-outline" href="#contact">Contact Us</a>
             </div>
             <p className="support-line">
-              <span>10+ years in business</span>
-              <span>Equipment owned by Gordon</span>
+              <span>Atlanta area</span>
               <span>Sales &amp; rentals</span>
+              <span>Equipment sourcing</span>
             </p>
           </div>
 
@@ -184,15 +184,11 @@ export default function Home() {
               alt="CAT 320CL excavator in Gordon Machinery Solutions' equipment yard"
               fetchPriority="high"
             />
-            <figcaption>
-              <span>Ready for the job</span>
-              <strong>Company-owned · Ready to work</strong>
-            </figcaption>
           </figure>
         </div>
       </section>
 
-      <section className="trust-strip" aria-label="Why choose Gordon">
+      <section className="trust-strip" aria-label="Gordon services at a glance">
         <div className="container trust-grid">
           {trustItems.map(({ icon: Icon, title, copy }) => (
             <div className="trust-item" key={title}>
@@ -257,11 +253,10 @@ export default function Home() {
               alt="CAT 320C excavator in Gordon Machinery Solutions' equipment yard"
               loading="lazy"
             />
-            <figcaption>Equipment selected for real-world work.</figcaption>
           </figure>
           <div className="about-copy">
             <p className="eyebrow">About Gordon</p>
-            <h2>Serving Equipment Buyers for More Than 10 Years</h2>
+            <h2>Equipment Sales, Rentals and Sourcing in Atlanta</h2>
             <p>
               Gordon Machinery Solutions is a value-driven used equipment dealer serving
               contractors and construction businesses throughout the Atlanta area.
@@ -270,10 +265,11 @@ export default function Home() {
               We help customers buy, rent and locate dependable machinery with clear
               communication and hands-on support from people who know equipment.
             </p>
-            <blockquote>
-              <strong>We sell what we own.</strong>
-              <span>Our inventory is company-owned—not brokered—so buyers know exactly who stands behind the sale.</span>
-            </blockquote>
+            <div className="about-services" aria-label="Gordon Machinery Solutions services">
+              <div><strong>Sales</strong><span>Used construction and landscaping equipment</span></div>
+              <div><strong>Rentals</strong><span>Short-term, long-term and rental-purchase options</span></div>
+              <div><strong>Sourcing</strong><span>Help locating equipment beyond current inventory</span></div>
+            </div>
             <a className="text-link" href="#contact">
               Talk With Gordon <ArrowRight size={17} aria-hidden="true" />
             </a>
@@ -335,7 +331,7 @@ export default function Home() {
         <div className="container contact-panel">
           <div className="contact-copy">
             <p className="eyebrow">Let&apos;s Talk</p>
-            <h2>Talk With Gordon Machinery Solutions</h2>
+            <h2>Tell Us What You Need</h2>
             <p>Have a machine to find, a rental need or a question about current inventory? Our team is ready to help.</p>
             <div className="contact-details">
               <a href="tel:+17707695281"><span><Phone size={19} aria-hidden="true" /></span><div><small>PHONE</small><strong>770-769-5281</strong></div></a>
