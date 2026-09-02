@@ -39,7 +39,7 @@ const inventory = [
     price: '$75,000',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558558381333-FVAAMBRD0BRH0JP8HEOE/deere2.png?format=1500w',
     alt: '2013 Deere backhoe loader owned by Gordon Machinery Solutions',
-    href: 'https://www.gordonmachinerysolutions.com/inventory/2012-deer-bulldozer',
+    href: '/equipment/2013-deere-backhoe-loader',
   },
   {
     category: 'STUMP GRINDER',
@@ -48,7 +48,7 @@ const inventory = [
     price: '$72,500',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020594540-9RPIF3KW0DD7H754MNY6/img+7.jpeg?format=1500w',
     alt: '2022 Vermeer SC70TX stump grinder owned by Gordon Machinery Solutions',
-    href: 'https://www.gordonmachinerysolutions.com/inventory/2012-deer-bulldozer-3pw2w-jzhhl-z76xp-wzw5p-fsygs-pxpap-72npm-mey9x',
+    href: '/equipment/2022-vermeer-sc70tx',
   },
   {
     category: 'COMPACT EXCAVATOR',
@@ -57,26 +57,26 @@ const inventory = [
     price: '$42,000',
     image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558540425329-IA0T275AK5VYOV5108NK/bobcattt.png?format=1500w',
     alt: '2010 Bobcat E80 excavator owned by Gordon Machinery Solutions',
-    href: 'https://www.gordonmachinerysolutions.com/inventory/2012-deer-bulldozer-3pw2w-jzhhl-a9gmz',
+    href: '/equipment/2010-bobcat-e80-excavator',
   },
 ];
 
 const categories = [
-  { label: 'Excavators', icon: Shovel },
-  { label: 'Backhoes', icon: Tractor },
-  { label: 'Loaders', icon: Truck },
-  { label: 'Stump Grinders', icon: TreePine },
-  { label: 'Forestry Equipment', icon: Factory },
-  { label: 'Other Equipment', icon: Wrench },
+  { label: 'Excavators', filter: 'Excavators', icon: Shovel },
+  { label: 'Backhoes', filter: 'Backhoe Loaders', icon: Tractor },
+  { label: 'Loaders', filter: '', icon: Truck },
+  { label: 'Stump Grinders', filter: 'Stump Grinders', icon: TreePine },
+  { label: 'Forestry Equipment', filter: '', icon: Factory },
+  { label: 'Other Equipment', filter: '', icon: Wrench },
 ];
 
 const navItems = [
-  { label: 'Home', href: '#top' },
-  { label: 'About', href: '#about' },
-  { label: 'Inventory', href: '#inventory' },
-  { label: 'Rentals', href: '#rentals' },
-  { label: 'Financing', href: '#financing' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/#about' },
+  { label: 'Inventory', href: '/equipment' },
+  { label: 'Rentals', href: '/#rentals' },
+  { label: 'Financing', href: '/#financing' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
 function Logo() {
@@ -121,7 +121,7 @@ export default function Home() {
 
       <header className="site-header">
         <div className="container header-inner">
-          <a href="#top" aria-label="Gordon Machinery Solutions home"><Logo /></a>
+          <a href="/" aria-label="Gordon Machinery Solutions home"><Logo /></a>
 
           <nav className="desktop-nav" aria-label="Primary navigation">
             {navItems.map((item, index) => (
@@ -168,7 +168,7 @@ export default function Home() {
               contractors throughout Atlanta and beyond.
             </p>
             <div className="hero-buttons">
-              <a className="button" href="#inventory">View Inventory</a>
+              <a className="button" href="/equipment">View Inventory</a>
               <a className="button button-outline" href="#contact">Contact Us</a>
             </div>
             <p className="support-line">
@@ -211,14 +211,14 @@ export default function Home() {
               <h2>Featured Equipment</h2>
               <p>Browse a selection of used construction and landscaping equipment.</p>
             </div>
-            <a className="text-link" href="https://www.gordonmachinerysolutions.com/inventory" target="_blank" rel="noreferrer">
+            <a className="text-link" href="/equipment">
               View All Inventory <ArrowRight size={17} aria-hidden="true" />
             </a>
           </div>
 
           <div className="inventory-grid">
             {inventory.map((item) => (
-              <a className="equipment-card" href={item.href} target="_blank" rel="noreferrer" key={item.title}>
+              <a className="equipment-card" href={item.href} key={item.title}>
                 <div className="card-image"><img src={item.image} alt={item.alt} loading="lazy" /></div>
                 <div className="card-body">
                   <span className="category-label">{item.category}</span>
@@ -238,8 +238,8 @@ export default function Home() {
               <p>Find the right machine for your next project.</p>
             </div>
             <div className="category-grid">
-              {categories.map(({ label, icon: Icon }) => (
-                <a href="https://www.gordonmachinerysolutions.com/inventory" target="_blank" rel="noreferrer" className="category-tile" key={label}>
+              {categories.map(({ label, filter, icon: Icon }) => (
+                <a href={filter ? `/equipment?category=${encodeURIComponent(filter)}` : '/equipment'} className="category-tile" key={label}>
                   <Icon size={27} strokeWidth={1.6} aria-hidden="true" />
                   <span>{label}</span>
                 </a>
@@ -374,7 +374,7 @@ export default function Home() {
       <footer className="site-footer">
         <div className="container footer-grid">
           <div className="footer-brand">
-            <a href="#top"><Logo /></a>
+            <a href="/"><Logo /></a>
             <p>Heavy equipment sales, rentals and sourcing in the Atlanta area.</p>
             <a className="footer-phone" href="tel:+17707695281"><Phone size={16} /> 770-769-5281</a>
           </div>
@@ -386,7 +386,7 @@ export default function Home() {
           </div>
           <div>
             <h3>Equipment</h3>
-            <a href="#inventory">Inventory</a>
+            <a href="/equipment">Inventory</a>
             <a href="#rentals">Rentals</a>
             <a href="#contact">Equipment Sourcing</a>
           </div>
