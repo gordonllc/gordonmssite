@@ -7,6 +7,8 @@ import {
   BadgeCheck,
   CalendarClock,
   Check,
+  ChevronLeft,
+  ChevronRight,
   CircleDollarSign,
   Clock3,
   Factory,
@@ -71,6 +73,27 @@ const categories = [
   { label: 'Other Equipment', filter: '', icon: Wrench },
 ];
 
+const heroSlides = [
+  {
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=1500w',
+    alt: "CAT 320CL excavator in Gordon Machinery Solutions' equipment yard",
+    label: 'Construction Equipment',
+    detail: 'Sales · Rentals · Sourcing',
+  },
+  {
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020594540-9RPIF3KW0DD7H754MNY6/img+7.jpeg?format=1500w',
+    alt: 'Vermeer stump grinder in the Gordon Machinery Solutions inventory',
+    label: 'Construction & Land Clearing',
+    detail: 'Flexible purchase and rental paths',
+  },
+  {
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558555025423-4S4QOJNHAC4Q5974GOF3/cat.png?format=1500w',
+    alt: "CAT excavator in Gordon Machinery Solutions' equipment yard",
+    label: 'Equipment for the Work Ahead',
+    detail: 'Serving contractors across Georgia',
+  },
+];
+
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/#about' },
@@ -96,6 +119,9 @@ export default function Home() {
   const [homeInventory, setHomeInventory] = useState(fallbackInventory);
   const [inquiryState, setInquiryState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [inquiryError, setInquiryError] = useState('');
+  const [acknowledgementSent, setAcknowledgementSent] = useState(false);
+  const [activeHero, setActiveHero] = useState(0);
+  const [carouselPaused, setCarouselPaused] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -116,6 +142,31 @@ export default function Home() {
       })
       .catch(() => undefined);
     return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (carouselPaused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => {
+      setActiveHero((current) => (current + 1) % heroSlides.length);
+    }, 6200);
+    return () => window.clearInterval(timer);
+  }, [carouselPaused]);
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      elements.forEach((element) => element.classList.add('is-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
 
   async function submitInquiry(event: FormEvent<HTMLFormElement>) {
@@ -142,9 +193,10 @@ export default function Home() {
           sourcePage: `${window.location.pathname}${window.location.search}`,
         }),
       });
-      const data = await response.json() as { received?: boolean; error?: string };
+      const data = await response.json() as { received?: boolean; acknowledgementSent?: boolean; error?: string };
       if (!response.ok || !data.received) throw new Error(data.error || 'We could not send your request.');
       form.reset();
+      setAcknowledgementSent(Boolean(data.acknowledgementSent));
       setInquiryState('sent');
     } catch (error) {
       setInquiryState('error');
@@ -202,7 +254,7 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="container hero-grid">
-          <div className="hero-copy">
+          <div className="hero-copy hero-enter-copy">
             <p className="eyebrow">Heavy Equipment Sales &amp; Rentals</p>
             <h1>Used Heavy Equipment for Sale and Rent.</h1>
             <p className="hero-lede">
@@ -220,18 +272,38 @@ export default function Home() {
             </p>
           </div>
 
-          <figure className="hero-media">
-            <img
-              src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=1500w"
-              alt="CAT 320CL excavator in Gordon Machinery Solutions' equipment yard"
-              fetchPriority="high"
-            />
+          <figure
+            className="hero-media hero-rotator"
+            onMouseEnter={() => setCarouselPaused(true)}
+            onMouseLeave={() => setCarouselPaused(false)}
+            onFocusCapture={() => setCarouselPaused(true)}
+            onBlurCapture={() => setCarouselPaused(false)}
+          >
+            <div className="hero-slides">
+              {heroSlides.map((slide, index) => (
+                <img
+                  className={index === activeHero ? 'is-active' : ''}
+                  src={slide.image}
+                  alt={slide.alt}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  key={slide.image}
+                />
+              ))}
+            </div>
+            <figcaption className="hero-slide-caption" aria-live="polite">
+              <span><small>{String(activeHero + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}</small><strong>{heroSlides[activeHero].label}</strong><em>{heroSlides[activeHero].detail}</em></span>
+              <span className="hero-slide-controls">
+                <button type="button" onClick={() => setActiveHero((current) => (current - 1 + heroSlides.length) % heroSlides.length)} aria-label="Previous equipment image"><ChevronLeft size={18} /></button>
+                <button type="button" onClick={() => setActiveHero((current) => (current + 1) % heroSlides.length)} aria-label="Next equipment image"><ChevronRight size={18} /></button>
+              </span>
+            </figcaption>
           </figure>
         </div>
       </section>
 
       <section className="trust-strip" aria-label="Gordon services at a glance">
-        <div className="container trust-grid">
+        <div className="container trust-grid" data-reveal>
           {trustItems.map(({ icon: Icon, title, copy }) => (
             <div className="trust-item" key={title}>
               <span className="trust-icon"><Icon size={21} strokeWidth={1.8} aria-hidden="true" /></span>
@@ -243,7 +315,7 @@ export default function Home() {
 
       <section className="section inventory-section" id="inventory">
         <div className="container">
-          <div className="section-heading-row">
+          <div className="section-heading-row" data-reveal>
             <div>
               <p className="eyebrow">Current Inventory</p>
               <h2>Featured Equipment</h2>
@@ -254,7 +326,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="inventory-grid">
+          <div className="inventory-grid" data-reveal>
             {homeInventory.map((item) => (
               <a className="equipment-card" href={item.href} key={item.title}>
                 <div className="card-image"><img src={item.image} alt={item.alt} loading="lazy" /></div>
@@ -270,7 +342,7 @@ export default function Home() {
           </div>
           <p className="inventory-note">Inventory, hours and pricing are shown from current public listings and may change. Contact Gordon to confirm availability.</p>
 
-          <div className="category-block">
+          <div className="category-block" data-reveal>
             <div className="category-heading">
               <h2>Shop by Equipment Type</h2>
               <p>Find the right machine for your next project.</p>
@@ -290,14 +362,14 @@ export default function Home() {
 
       <section className="section about-section" id="about">
         <div className="container about-grid">
-          <figure className="about-photo">
+          <figure className="about-photo" data-reveal>
             <img
               src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558555025423-4S4QOJNHAC4Q5974GOF3/cat.png?format=1500w"
               alt="CAT 320C excavator in Gordon Machinery Solutions' equipment yard"
               loading="lazy"
             />
           </figure>
-          <div className="about-copy">
+          <div className="about-copy" data-reveal>
             <p className="eyebrow">About Gordon</p>
             <h2>Equipment Sales, Rentals and Sourcing in Atlanta</h2>
             <p>
@@ -322,14 +394,14 @@ export default function Home() {
 
       <section className="rentals-section" id="rentals">
         <div className="container rentals-grid">
-          <figure className="rentals-photo">
+          <figure className="rentals-photo" data-reveal>
             <img
               src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558546181171-881IF7O9MBGS55ZESNNG/jcb3cxbackhoe.png?format=1500w"
               alt="2017 JCB 3CX backhoe loader available from Gordon Machinery Solutions"
               loading="lazy"
             />
           </figure>
-          <div className="rentals-copy">
+          <div className="rentals-copy" data-reveal>
             <p className="eyebrow">Equipment Rentals</p>
             <h2>Short- and Long-Term Equipment Rentals</h2>
             <p>Short-term, long-term and rental-purchase options are available for qualifying equipment.</p>
@@ -346,7 +418,7 @@ export default function Home() {
       </section>
 
       <section className="section sourcing-section">
-        <div className="container sourcing-inner">
+        <div className="container sourcing-inner" data-reveal>
           <span className="sourcing-icon"><Search size={27} strokeWidth={1.7} aria-hidden="true" /></span>
           <div className="sourcing-copy">
             <p className="eyebrow">Equipment Sourcing</p>
@@ -358,7 +430,7 @@ export default function Home() {
       </section>
 
       <section className="financing-section" id="financing">
-        <div className="container financing-card">
+        <div className="container financing-card" data-reveal>
           <div className="financing-copy">
             <span className="finance-icon"><CircleDollarSign size={28} strokeWidth={1.7} aria-hidden="true" /></span>
             <div>
@@ -374,7 +446,7 @@ export default function Home() {
       </section>
 
       <section className="section contact-section" id="contact">
-        <div className="container contact-panel">
+        <div className="container contact-panel" data-reveal>
           <div className="contact-copy">
             <p className="eyebrow">Let&apos;s Talk</p>
             <h2>Tell Us What You Need</h2>
@@ -392,7 +464,7 @@ export default function Home() {
               <span><Check size={28} aria-hidden="true" /></span>
               <p className="eyebrow">Request Received</p>
               <h2>Thanks—we&apos;ll be in touch.</h2>
-              <p>Your inquiry has been sent to the Gordon equipment desk. For immediate assistance, call <a href="tel:+17707695281">770-769-5281</a>.</p>
+              <p>Your inquiry has been sent to the Gordon equipment desk. {acknowledgementSent && 'A confirmation email is on its way. '}For immediate assistance, call <a href="tel:+17707695281">770-769-5281</a>.</p>
               <button className="admin-secondary-button" type="button" onClick={() => setInquiryState('idle')}>Send Another Request</button>
             </div>
           ) : (
