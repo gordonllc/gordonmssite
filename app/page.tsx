@@ -94,6 +94,8 @@ function Logo() {
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [homeInventory, setHomeInventory] = useState(fallbackInventory);
+  const [inquiryState, setInquiryState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [inquiryError, setInquiryError] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -116,21 +118,38 @@ export default function Home() {
     return () => { active = false; };
   }, []);
 
-  function submitInquiry(event: FormEvent<HTMLFormElement>) {
+  async function submitInquiry(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const values = new FormData(event.currentTarget);
-    const interest = values.get('interest') || 'Equipment inquiry';
-    const subject = encodeURIComponent(`Website inquiry: ${interest}`);
-    const lines = [
-      `Name: ${values.get('name') || ''}`,
-      `Company: ${values.get('company') || ''}`,
-      `Phone: ${values.get('phone') || ''}`,
-      `Email: ${values.get('email') || ''}`,
-      `Interested in: ${interest}`,
-      '',
-      `${values.get('message') || ''}`,
-    ];
-    window.location.href = `mailto:Sales@GordonMachinerySolutions.com?subject=${subject}&body=${encodeURIComponent(lines.join('\n'))}`;
+    const form = event.currentTarget;
+    const values = new FormData(form);
+    const pageParams = new URLSearchParams(window.location.search);
+    setInquiryState('sending');
+    setInquiryError('');
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: values.get('name'),
+          company: values.get('company'),
+          phone: values.get('phone'),
+          email: values.get('email'),
+          interest: values.get('interest'),
+          equipmentSlug: pageParams.get('equipment'),
+          equipmentTitle: pageParams.get('machine'),
+          message: values.get('message'),
+          website: values.get('website'),
+          sourcePage: `${window.location.pathname}${window.location.search}`,
+        }),
+      });
+      const data = await response.json() as { received?: boolean; error?: string };
+      if (!response.ok || !data.received) throw new Error(data.error || 'We could not send your request.');
+      form.reset();
+      setInquiryState('sent');
+    } catch (error) {
+      setInquiryState('error');
+      setInquiryError(error instanceof Error ? error.message : 'We could not send your request. Please call 770-769-5281.');
+    }
   }
 
   return (
@@ -368,29 +387,41 @@ export default function Home() {
             </div>
           </div>
 
-          <form className="contact-form" onSubmit={submitInquiry}>
-            <div className="field-grid">
-              <label>Name<input name="name" type="text" autoComplete="name" required /></label>
-              <label>Company<input name="company" type="text" autoComplete="organization" /></label>
-              <label>Phone<input name="phone" type="tel" autoComplete="tel" required /></label>
-              <label>Email<input name="email" type="email" autoComplete="email" required /></label>
+          {inquiryState === 'sent' ? (
+            <div className="contact-form form-success" role="status">
+              <span><Check size={28} aria-hidden="true" /></span>
+              <p className="eyebrow">Request Received</p>
+              <h2>Thanks—we&apos;ll be in touch.</h2>
+              <p>Your inquiry has been sent to the Gordon equipment desk. For immediate assistance, call <a href="tel:+17707695281">770-769-5281</a>.</p>
+              <button className="admin-secondary-button" type="button" onClick={() => setInquiryState('idle')}>Send Another Request</button>
             </div>
-            <label>
-              I&apos;m interested in
-              <span className="select-wrap">
-                <select name="interest" defaultValue="Buying equipment">
-                  <option>Buying equipment</option>
-                  <option>Equipment rental</option>
-                  <option>Equipment sourcing</option>
-                  <option>Financing</option>
-                  <option>Other</option>
-                </select>
-              </span>
-            </label>
-            <label>Message<textarea name="message" rows={4} required /></label>
-            <button className="button submit-button" type="submit">Send Message <ArrowRight size={17} aria-hidden="true" /></button>
-            <p className="form-note">Submitting opens a pre-addressed email to the Gordon team.</p>
-          </form>
+          ) : (
+            <form className="contact-form" onSubmit={submitInquiry}>
+              <label className="form-honeypot" aria-hidden="true">Website<input name="website" type="text" tabIndex={-1} autoComplete="off" /></label>
+              <div className="field-grid">
+                <label>Name<input name="name" type="text" autoComplete="name" required /></label>
+                <label>Company<input name="company" type="text" autoComplete="organization" /></label>
+                <label>Phone<input name="phone" type="tel" autoComplete="tel" required /></label>
+                <label>Email<input name="email" type="email" autoComplete="email" required /></label>
+              </div>
+              <label>
+                I&apos;m interested in
+                <span className="select-wrap">
+                  <select name="interest" defaultValue="Buying equipment">
+                    <option>Buying equipment</option>
+                    <option>Equipment rental</option>
+                    <option>Equipment sourcing</option>
+                    <option>Financing</option>
+                    <option>Other</option>
+                  </select>
+                </span>
+              </label>
+              <label>Message<textarea name="message" rows={4} required /></label>
+              {inquiryState === 'error' && <p className="form-error" role="alert">{inquiryError}</p>}
+              <button className="button submit-button" type="submit" disabled={inquiryState === 'sending'}>{inquiryState === 'sending' ? 'Sending…' : 'Send Request'} {inquiryState !== 'sending' && <ArrowRight size={17} aria-hidden="true" />}</button>
+              <p className="form-note">By submitting, you agree that Gordon Machinery Solutions may contact you about this request.</p>
+            </form>
+          )}
         </div>
       </section>
 

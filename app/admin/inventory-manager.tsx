@@ -6,10 +6,14 @@ import {
   Check,
   Eye,
   EyeOff,
+  Inbox,
   ImagePlus,
   LogOut,
+  Mail,
+  MessageSquareText,
   PackageCheck,
   Pencil,
+  Phone,
   Plus,
   Search,
   Star,
@@ -17,6 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import type { EquipmentItem } from '../data/equipment';
+import type { Inquiry, InquiryStatus } from '../../db/inquiries';
 
 const blankItem: EquipmentItem = {
   slug: '',
@@ -40,14 +45,18 @@ const blankItem: EquipmentItem = {
 
 export default function InventoryManager({
   initialItems,
+  initialInquiries,
   userName,
   signOutHref,
 }: {
   initialItems: EquipmentItem[];
+  initialInquiries: Inquiry[];
   userName: string;
   signOutHref: string;
 }) {
+  const [activeView, setActiveView] = useState<'equipment' | 'inquiries'>('equipment');
   const [items, setItems] = useState(initialItems);
+  const [inquiries, setInquiries] = useState(initialInquiries);
   const [query, setQuery] = useState('');
   const [editor, setEditor] = useState<{ item: EquipmentItem; isNew: boolean } | null>(null);
   const [notice, setNotice] = useState('');
@@ -63,6 +72,9 @@ export default function InventoryManager({
   const publishedCount = items.filter((item) => item.published !== false).length;
   const availableCount = items.filter((item) => item.status === 'Available').length;
   const featuredCount = items.filter((item) => item.featured).length;
+  const newInquiryCount = inquiries.filter((inquiry) => inquiry.status === 'New').length;
+  const contactedInquiryCount = inquiries.filter((inquiry) => inquiry.status === 'Contacted').length;
+  const closedInquiryCount = inquiries.filter((inquiry) => inquiry.status === 'Closed').length;
 
   function upsertItem(item: EquipmentItem, previousSlug?: string) {
     setItems((current) => {
@@ -111,55 +123,139 @@ export default function InventoryManager({
     }
   }
 
+  async function changeInquiryStatus(inquiry: Inquiry, status: InquiryStatus) {
+    setBusySlug(`inquiry-${inquiry.id}`);
+    setNotice('');
+    try {
+      const response = await fetch(`/api/admin/inquiries/${inquiry.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      const data = await response.json() as { inquiry?: Inquiry; error?: string };
+      if (!response.ok || !data.inquiry) throw new Error(data.error || 'Unable to update the inquiry.');
+      setInquiries((current) => current.map((candidate) => candidate.id === inquiry.id ? data.inquiry! : candidate));
+      setNotice(`Inquiry marked ${status.toLowerCase()}.`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Unable to update the inquiry.');
+    } finally {
+      setBusySlug('');
+    }
+  }
+
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <a className="admin-brand" href="/"><span>G</span><div><strong>Gordon Machinery</strong><small>Inventory Manager</small></div></a>
+        <a className="admin-brand" href="/"><span>G</span><div><strong>Gordon Machinery</strong><small>Sales Operations</small></div></a>
         <div className="admin-account"><span>{userName}</span><a href={signOutHref}><LogOut size={16} /> Sign out</a></div>
       </header>
 
       <div className="admin-main">
+        <nav className="admin-view-tabs" aria-label="Admin sections">
+          <button className={activeView === 'equipment' ? 'is-active' : ''} type="button" onClick={() => { setActiveView('equipment'); setNotice(''); }}><PackageCheck size={17} /> Equipment</button>
+          <button className={activeView === 'inquiries' ? 'is-active' : ''} type="button" onClick={() => { setActiveView('inquiries'); setNotice(''); }}><Inbox size={17} /> Inquiries{newInquiryCount > 0 && <span>{newInquiryCount}</span>}</button>
+        </nav>
+
         <section className="admin-title-row">
-          <div><p className="eyebrow">Inventory Manager</p><h1>Equipment</h1><p>Add machines, update availability and control what appears on the public site.</p></div>
-          <div className="admin-title-actions">
-            <a className="admin-secondary-button" href="/equipment" target="_blank" rel="noreferrer">View public inventory <ArrowUpRight size={16} /></a>
-            <button className="button" type="button" onClick={() => setEditor({ item: blankItem, isNew: true })}><Plus size={18} /> Add Machine</button>
-          </div>
+          {activeView === 'equipment' ? (
+            <>
+              <div><p className="eyebrow">Inventory Manager</p><h1>Equipment</h1><p>Add machines, update availability and control what appears on the public site.</p></div>
+              <div className="admin-title-actions">
+                <a className="admin-secondary-button" href="/equipment" target="_blank" rel="noreferrer">View public inventory <ArrowUpRight size={16} /></a>
+                <button className="button" type="button" onClick={() => setEditor({ item: blankItem, isNew: true })}><Plus size={18} /> Add Machine</button>
+              </div>
+            </>
+          ) : (
+            <div><p className="eyebrow">Lead Inbox</p><h1>Inquiries</h1><p>Review requests from the website and track each conversation through follow-up.</p></div>
+          )}
         </section>
 
-        <section className="admin-stats" aria-label="Inventory summary">
-          <div><PackageCheck size={20} /><span><strong>{items.length}</strong>Total machines</span></div>
-          <div><Eye size={20} /><span><strong>{publishedCount}</strong>Published</span></div>
-          <div><Check size={20} /><span><strong>{availableCount}</strong>Available</span></div>
-          <div><Star size={20} /><span><strong>{featuredCount}</strong>Featured</span></div>
-        </section>
+        {activeView === 'equipment' ? (
+          <>
+            <section className="admin-stats" aria-label="Inventory summary">
+              <div><PackageCheck size={20} /><span><strong>{items.length}</strong>Total machines</span></div>
+              <div><Eye size={20} /><span><strong>{publishedCount}</strong>Published</span></div>
+              <div><Check size={20} /><span><strong>{availableCount}</strong>Available</span></div>
+              <div><Star size={20} /><span><strong>{featuredCount}</strong>Featured</span></div>
+            </section>
 
-        <section className="admin-list-panel">
-          <div className="admin-list-toolbar">
-            <div><h2>All Equipment</h2><p>{items.length} {items.length === 1 ? 'listing' : 'listings'}</p></div>
-            <label className="admin-search"><Search size={17} /><span className="sr-only">Search inventory</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search equipment" /></label>
-          </div>
+            <section className="admin-list-panel">
+              <div className="admin-list-toolbar">
+                <div><h2>All Equipment</h2><p>{items.length} {items.length === 1 ? 'listing' : 'listings'}</p></div>
+                <label className="admin-search"><Search size={17} /><span className="sr-only">Search inventory</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search equipment" /></label>
+              </div>
 
-          {notice && <p className="admin-notice" role="status">{notice}</p>}
+              {notice && <p className="admin-notice" role="status">{notice}</p>}
 
-          <div className="admin-equipment-list">
-            {visibleItems.map((item) => (
-              <article className="admin-equipment-row" key={item.slug}>
-                <img src={item.image} alt="" />
-                <div className="admin-equipment-name"><span>{item.category}</span><strong>{item.title}</strong><small>{item.year} · {item.hours ? `${item.hours.toLocaleString()} hours` : 'Hours not listed'}</small></div>
-                <strong className="admin-row-price">{item.priceLabel}</strong>
-                <span className={`admin-status admin-status-${item.status.toLowerCase()}`}>{item.status}</span>
-                <span className={`admin-visibility ${item.published === false ? 'is-hidden' : ''}`}>{item.published === false ? <EyeOff size={14} /> : <Eye size={14} />}{item.published === false ? 'Hidden' : 'Published'}</span>
-                <div className="admin-row-actions">
-                  <button type="button" disabled={busySlug === item.slug} onClick={() => setEditor({ item, isNew: false })} aria-label={`Edit ${item.title}`}><Pencil size={16} /></button>
-                  <button type="button" disabled={busySlug === item.slug} onClick={() => toggleVisibility(item)} aria-label={item.published === false ? `Publish ${item.title}` : `Hide ${item.title}`}>{item.published === false ? <Eye size={16} /> : <EyeOff size={16} />}</button>
-                  <button className="danger" type="button" disabled={busySlug === item.slug} onClick={() => removeItem(item)} aria-label={`Remove ${item.title}`}><Trash2 size={16} /></button>
-                </div>
-              </article>
-            ))}
-            {!visibleItems.length && <div className="admin-empty"><Search size={26} /><strong>No matching equipment</strong><span>Try another search.</span></div>}
-          </div>
-        </section>
+              <div className="admin-equipment-list">
+                {visibleItems.map((item) => (
+                  <article className="admin-equipment-row" key={item.slug}>
+                    <img src={item.image} alt="" />
+                    <div className="admin-equipment-name"><span>{item.category}</span><strong>{item.title}</strong><small>{item.year} · {item.hours ? `${item.hours.toLocaleString()} hours` : 'Hours not listed'}</small></div>
+                    <strong className="admin-row-price">{item.priceLabel}</strong>
+                    <span className={`admin-status admin-status-${item.status.toLowerCase()}`}>{item.status}</span>
+                    <span className={`admin-visibility ${item.published === false ? 'is-hidden' : ''}`}>{item.published === false ? <EyeOff size={14} /> : <Eye size={14} />}{item.published === false ? 'Hidden' : 'Published'}</span>
+                    <div className="admin-row-actions">
+                      <button type="button" disabled={busySlug === item.slug} onClick={() => setEditor({ item, isNew: false })} aria-label={`Edit ${item.title}`}><Pencil size={16} /></button>
+                      <button type="button" disabled={busySlug === item.slug} onClick={() => toggleVisibility(item)} aria-label={item.published === false ? `Publish ${item.title}` : `Hide ${item.title}`}>{item.published === false ? <Eye size={16} /> : <EyeOff size={16} />}</button>
+                      <button className="danger" type="button" disabled={busySlug === item.slug} onClick={() => removeItem(item)} aria-label={`Remove ${item.title}`}><Trash2 size={16} /></button>
+                    </div>
+                  </article>
+                ))}
+                {!visibleItems.length && <div className="admin-empty"><Search size={26} /><strong>No matching equipment</strong><span>Try another search.</span></div>}
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
+            <section className="admin-stats admin-lead-stats" aria-label="Inquiry summary">
+              <div><MessageSquareText size={20} /><span><strong>{inquiries.length}</strong>Total inquiries</span></div>
+              <div><Inbox size={20} /><span><strong>{newInquiryCount}</strong>New</span></div>
+              <div><Phone size={20} /><span><strong>{contactedInquiryCount}</strong>Contacted</span></div>
+              <div><Check size={20} /><span><strong>{closedInquiryCount}</strong>Closed</span></div>
+            </section>
+
+            <section className="admin-list-panel admin-inquiry-panel">
+              <div className="admin-list-toolbar"><div><h2>Website Inquiries</h2><p>Newest requests appear first within each follow-up stage.</p></div></div>
+              {notice && <p className="admin-notice" role="status">{notice}</p>}
+              <div className="admin-inquiry-list">
+                {inquiries.map((inquiry) => (
+                  <article className={`admin-inquiry-card inquiry-${inquiry.status.toLowerCase()}`} key={inquiry.id}>
+                    <div className="admin-inquiry-topline">
+                      <span className="admin-inquiry-status">{inquiry.status}</span>
+                      <time dateTime={inquiry.createdAt}>{formatInquiryDate(inquiry.createdAt)}</time>
+                    </div>
+                    <div className="admin-inquiry-grid">
+                      <div className="admin-inquiry-person">
+                        <strong>{inquiry.name}</strong>
+                        {inquiry.company && <span>{inquiry.company}</span>}
+                        <div className="admin-inquiry-contact">
+                          <a href={`tel:${inquiry.phone}`}><Phone size={14} /> {inquiry.phone}</a>
+                          <a href={`mailto:${inquiry.email}?subject=${encodeURIComponent(`Gordon Machinery — ${inquiry.interest}`)}`}><Mail size={14} /> {inquiry.email}</a>
+                        </div>
+                      </div>
+                      <div className="admin-inquiry-request">
+                        <small>INTERESTED IN</small>
+                        <strong>{inquiry.equipmentTitle || inquiry.interest}</strong>
+                        {inquiry.equipmentSlug && <a href={`/equipment/${inquiry.equipmentSlug}`} target="_blank" rel="noreferrer">View machine <ArrowUpRight size={13} /></a>}
+                      </div>
+                      <p className="admin-inquiry-message">{inquiry.message}</p>
+                    </div>
+                    <div className="admin-inquiry-footer">
+                      <label>Follow-up status
+                        <select value={inquiry.status} disabled={busySlug === `inquiry-${inquiry.id}`} onChange={(event) => changeInquiryStatus(inquiry, event.target.value as InquiryStatus)}>
+                          <option>New</option><option>Contacted</option><option>Closed</option>
+                        </select>
+                      </label>
+                      <div><a className="admin-secondary-button" href={`tel:${inquiry.phone}`}><Phone size={15} /> Call</a><a className="button" href={`mailto:${inquiry.email}?subject=${encodeURIComponent(`Gordon Machinery — ${inquiry.interest}`)}`}><Mail size={15} /> Reply</a></div>
+                    </div>
+                  </article>
+                ))}
+                {!inquiries.length && <div className="admin-empty"><Inbox size={27} /><strong>No inquiries yet</strong><span>New website requests will appear here.</span></div>}
+              </div>
+            </section>
+          </>
+        )}
       </div>
 
       {editor && (
@@ -177,6 +273,18 @@ export default function InventoryManager({
       )}
     </main>
   );
+}
+
+function formatInquiryDate(value: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'America/New_York',
+    timeZoneName: 'short',
+  }).format(new Date(value));
 }
 
 function EquipmentEditor({ item, isNew, onClose, onSaved }: {

@@ -26,3 +26,21 @@ export const equipmentItems = sqliteTable('equipment_items', {
   index('idx_equipment_status').on(table.status),
   index('idx_equipment_category').on(table.category),
 ]);
+
+export const inquiries = sqliteTable('inquiries', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  company: text('company'),
+  phone: text('phone').notNull(),
+  email: text('email').notNull(),
+  interest: text('interest').notNull(),
+  equipmentSlug: text('equipment_slug'),
+  equipmentTitle: text('equipment_title'),
+  message: text('message').notNull(),
+  sourcePage: text('source_page').notNull().default('/'),
+  status: text('status').notNull().default('New'),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+}, (table) => [
+  index('idx_inquiries_status_created').on(table.status, table.createdAt),
+]);

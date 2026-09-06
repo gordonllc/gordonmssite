@@ -15,6 +15,13 @@
       "when": 1788341291160,
       "tag": "0001_bent_landau",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788671124191,
+      "tag": "0002_natural_justin_hammer",
+      "breakpoints": true
     }
   ]
 }

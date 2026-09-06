@@ -104,7 +104,7 @@ export default async function EquipmentDetailPage({
               </div>
 
               <div className="detail-actions">
-                <a className="button" href="/#contact">{item.status === 'Sold' || item.status === 'Rented' ? 'Ask About Similar Equipment' : 'Request Information'} <ArrowRight size={17} aria-hidden="true" /></a>
+                <a className="button" href={`/?equipment=${encodeURIComponent(item.slug)}&machine=${encodeURIComponent(item.title)}#contact`}>{item.status === 'Sold' || item.status === 'Rented' ? 'Ask About Similar Equipment' : 'Request Information'} <ArrowRight size={17} aria-hidden="true" /></a>
                 <a className="button button-outline" href="tel:+17707695281"><Phone size={17} aria-hidden="true" /> Call 770-769-5281</a>
               </div>
               <p className="detail-note">Availability, hours and pricing may change. Contact Gordon to confirm current details.</p>
