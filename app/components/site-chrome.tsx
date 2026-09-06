@@ -14,7 +14,7 @@ export function GordonLogo() {
   return (
     <span className="brand">
       <img
-        src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558671041670-I3D14VD7JQA0ND87ZY10/imageedit_3_2022889204.png?format=original"
+        src="/gordon-machinery-logo.png"
         alt="Gordon Machinery Solutions"
       />
     </span>
