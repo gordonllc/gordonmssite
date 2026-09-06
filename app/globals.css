@@ -1545,3 +1545,64 @@ h1, h2, h3, .price, .detail-price, .catalog-card-footer > strong { font-family: 
   .home-site-header, .home-site-header .brand, .home-site-header .brand img, .home-site-header .button-small,
   .buying-image-stack img, .buying-step { transition: none; }
 }
+
+/* Transparent logo: use scale, not a glow or backing panel, for contrast. */
+.site-header .brand {
+  width: 200px;
+  height: 82px;
+}
+
+.site-header .brand img,
+.home-site-header .brand img,
+.site-footer .brand img {
+  width: 196px;
+  filter: none;
+}
+
+.home-site-header.is-scrolled .brand {
+  width: 172px;
+  height: 70px;
+}
+
+.home-site-header.is-scrolled .brand img {
+  width: 168px;
+}
+
+.site-footer .brand {
+  width: 210px;
+}
+
+.site-footer .brand img {
+  width: 206px;
+}
+
+@media (max-width: 980px) {
+  .site-header .brand {
+    width: 180px;
+    height: 76px;
+  }
+
+  .site-header .brand img {
+    width: 176px;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header .brand {
+    width: 156px;
+    height: 68px;
+  }
+
+  .site-header .brand img {
+    width: 152px;
+  }
+
+  .home-site-header.is-scrolled .brand {
+    width: 148px;
+    height: 60px;
+  }
+
+  .home-site-header.is-scrolled .brand img {
+    width: 144px;
+  }
+}
