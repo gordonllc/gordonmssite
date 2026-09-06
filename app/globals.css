@@ -1182,6 +1182,7 @@ h1, h2, h3, .price, .detail-price, .catalog-card-footer > strong { font-family: 
 .hero-cinematic { position: relative; isolation: isolate; min-height: max(780px, 94svh); display: grid; padding: 0; background: var(--charcoal); }
 .hero-cinematic-media { position: absolute; inset: 0; z-index: -3; margin: 0; overflow: hidden; }
 .hero-cinematic-media img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 58% center; animation: cinematic-drift 18s cubic-bezier(.2,.65,.35,1) both; }
+.hero-cinematic-media video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; object-position: 58% center; }
 .hero-cinematic-shade { position: absolute; inset: 0; z-index: -2; width: 72%; background: rgba(12,15,16,.82); clip-path: polygon(0 0, 86% 0, 67% 100%, 0 100%); }
 .hero-cinematic::after { content: ''; position: absolute; right: 0; bottom: 0; left: 0; z-index: -1; height: 18%; background: rgba(10,12,13,.35); pointer-events: none; }
 .hero-cinematic-inner { min-height: max(780px, 94svh); display: flex; align-items: flex-end; position: relative; padding-top: 150px; padding-bottom: 94px; }
@@ -1452,6 +1453,7 @@ h1, h2, h3, .price, .detail-price, .catalog-card-footer > strong { font-family: 
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cinematic-media img { animation: none; }
+  .hero-cinematic-media video { display: none; }
 }
 
 /* Immersive, evidence-led refinement */

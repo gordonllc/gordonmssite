@@ -251,6 +251,17 @@ export default function Home() {
             alt="CAT excavator in Gordon Machinery Solutions' Atlanta equipment yard"
             fetchPriority="high"
           />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=2500w"
+            aria-hidden="true"
+          >
+            <source src="/videos/gordon-yard-seedance-hero.mp4" type="video/mp4" />
+          </video>
         </figure>
         <div className="hero-cinematic-shade" aria-hidden="true" />
         <div className="container hero-cinematic-inner">
