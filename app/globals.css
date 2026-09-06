@@ -1559,6 +1559,11 @@ h1, h2, h3, .price, .detail-price, .catalog-card-footer > strong { font-family: 
   filter: none;
 }
 
+.home-site-header .brand img,
+.site-footer .brand img {
+  filter: drop-shadow(0 0 1px rgba(255,255,255,.92));
+}
+
 .home-site-header.is-scrolled .brand {
   width: 172px;
   height: 70px;
