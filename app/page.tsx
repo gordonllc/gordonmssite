@@ -3,35 +3,23 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
-  Award,
-  BadgeCheck,
-  CalendarClock,
   Check,
-  ChevronLeft,
-  ChevronRight,
   CircleDollarSign,
   Clock3,
-  Factory,
   HardHat,
   Mail,
   MapPin,
   Menu,
   Phone,
   Search,
-  Shovel,
-  Tractor,
-  TreePine,
-  Truck,
-  Wrench,
   X,
 } from 'lucide-react';
 import type { EquipmentItem } from './data/equipment';
 
 const trustItems = [
-  { icon: Award, title: '10+ Years Experience', copy: 'Serving contractors across Georgia' },
-  { icon: BadgeCheck, title: 'Used Equipment Inventory', copy: 'Excavators, backhoes, grinders and more' },
-  { icon: CalendarClock, title: 'Short & Long-Term Rentals', copy: 'Flexible terms for the job ahead' },
-  { icon: Search, title: 'Equipment Sourcing', copy: 'We help locate the right machine' },
+  { title: 'Used Equipment', copy: 'Excavators, backhoes, grinders and more' },
+  { title: 'Flexible Rentals', copy: 'Short- and long-term options' },
+  { title: 'Equipment Sourcing', copy: 'Help locating the right machine' },
 ];
 
 const fallbackInventory = [
@@ -65,41 +53,18 @@ const fallbackInventory = [
 ];
 
 const categories = [
-  { label: 'Excavators', filter: 'Excavators', icon: Shovel },
-  { label: 'Backhoes', filter: 'Backhoe Loaders', icon: Tractor },
-  { label: 'Loaders', filter: '', icon: Truck },
-  { label: 'Stump Grinders', filter: 'Stump Grinders', icon: TreePine },
-  { label: 'Forestry Equipment', filter: '', icon: Factory },
-  { label: 'Other Equipment', filter: '', icon: Wrench },
-];
-
-const heroSlides = [
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=1500w',
-    alt: "CAT 320CL excavator in Gordon Machinery Solutions' equipment yard",
-    label: 'Construction Equipment',
-    detail: 'Sales · Rentals · Sourcing',
-  },
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020594540-9RPIF3KW0DD7H754MNY6/img+7.jpeg?format=1500w',
-    alt: 'Vermeer stump grinder in the Gordon Machinery Solutions inventory',
-    label: 'Construction & Land Clearing',
-    detail: 'Flexible purchase and rental paths',
-  },
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558555025423-4S4QOJNHAC4Q5974GOF3/cat.png?format=1500w',
-    alt: "CAT excavator in Gordon Machinery Solutions' equipment yard",
-    label: 'Equipment for the Work Ahead',
-    detail: 'Serving contractors across Georgia',
-  },
+  { label: 'Excavators', filter: 'Excavators' },
+  { label: 'Backhoes', filter: 'Backhoe Loaders' },
+  { label: 'Loaders', filter: '' },
+  { label: 'Stump Grinders', filter: 'Stump Grinders' },
+  { label: 'Forestry Equipment', filter: '' },
+  { label: 'Other Equipment', filter: '' },
 ];
 
 const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/#about' },
   { label: 'Inventory', href: '/equipment' },
   { label: 'Rentals', href: '/#rentals' },
-  { label: 'Financing', href: '/#financing' },
+  { label: 'About', href: '/#about' },
   { label: 'Contact', href: '/#contact' },
 ];
 
@@ -120,8 +85,6 @@ export default function Home() {
   const [inquiryState, setInquiryState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [inquiryError, setInquiryError] = useState('');
   const [acknowledgementSent, setAcknowledgementSent] = useState(false);
-  const [activeHero, setActiveHero] = useState(0);
-  const [carouselPaused, setCarouselPaused] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -143,14 +106,6 @@ export default function Home() {
       .catch(() => undefined);
     return () => { active = false; };
   }, []);
-
-  useEffect(() => {
-    if (carouselPaused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const timer = window.setInterval(() => {
-      setActiveHero((current) => (current + 1) % heroSlides.length);
-    }, 6200);
-    return () => window.clearInterval(timer);
-  }, [carouselPaused]);
 
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
@@ -206,20 +161,13 @@ export default function Home() {
 
   return (
     <main>
-      <div className="utility-bar">
-        <div className="container utility-content">
-          <span>Heavy Equipment Sales &amp; Rentals <i /> Atlanta, Georgia</span>
-          <span>Mon–Fri 8:00 AM–5:00 PM</span>
-        </div>
-      </div>
-
-      <header className="site-header">
+      <header className="site-header home-site-header">
         <div className="container header-inner">
           <a href="/" aria-label="Gordon Machinery Solutions home"><Logo /></a>
 
           <nav className="desktop-nav" aria-label="Primary navigation">
-            {navItems.map((item, index) => (
-              <a className={index === 0 ? 'active' : ''} href={item.href} key={item.label}>{item.label}</a>
+            {navItems.map((item) => (
+              <a href={item.href} key={item.label}>{item.label}</a>
             ))}
           </nav>
 
@@ -228,7 +176,7 @@ export default function Home() {
               <Phone size={17} strokeWidth={2} aria-hidden="true" />
               <span>770-769-5281</span>
             </a>
-            <a className="button button-small" href="#contact">Request a Quote</a>
+            <a className="button button-small" href="#contact">Request Equipment</a>
           </div>
 
           <button
@@ -252,61 +200,43 @@ export default function Home() {
         )}
       </header>
 
-      <section className="hero" id="top">
-        <div className="container hero-grid">
+      <section className="hero hero-cinematic" id="top">
+        <figure className="hero-cinematic-media">
+          <img
+            src="https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=2500w"
+            alt="CAT excavator in Gordon Machinery Solutions' Atlanta equipment yard"
+            fetchPriority="high"
+          />
+        </figure>
+        <div className="hero-cinematic-shade" aria-hidden="true" />
+        <div className="container hero-cinematic-inner">
           <div className="hero-copy hero-enter-copy">
-            <p className="eyebrow">Heavy Equipment Sales &amp; Rentals</p>
-            <h1>Used Heavy Equipment for Sale and Rent.</h1>
+            <p className="eyebrow">Atlanta, Georgia / Sales · Rentals · Sourcing</p>
+            <h1>Heavy equipment for the work ahead.</h1>
             <p className="hero-lede">
-              Quality used construction equipment, rentals and equipment sourcing for
-              contractors throughout Atlanta and beyond.
+              Used construction equipment, flexible rentals and hands-on sourcing for
+              contractors who need a straight answer and the right machine.
             </p>
             <div className="hero-buttons">
               <a className="button" href="/equipment">View Inventory</a>
               <a className="button button-outline" href="#contact">Contact Us</a>
             </div>
             <p className="support-line">
-              <span>Atlanta area</span>
-              <span>Sales &amp; rentals</span>
-              <span>Equipment sourcing</span>
+              <span>Current inventory</span>
+              <span>Flexible terms</span>
+              <span>Nationwide sourcing</span>
             </p>
           </div>
-
-          <figure
-            className="hero-media hero-rotator"
-            onMouseEnter={() => setCarouselPaused(true)}
-            onMouseLeave={() => setCarouselPaused(false)}
-            onFocusCapture={() => setCarouselPaused(true)}
-            onBlurCapture={() => setCarouselPaused(false)}
-          >
-            <div className="hero-slides">
-              {heroSlides.map((slide, index) => (
-                <img
-                  className={index === activeHero ? 'is-active' : ''}
-                  src={slide.image}
-                  alt={slide.alt}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  key={slide.image}
-                />
-              ))}
-            </div>
-            <figcaption className="hero-slide-caption" aria-live="polite">
-              <span><small>{String(activeHero + 1).padStart(2, '0')} / {String(heroSlides.length).padStart(2, '0')}</small><strong>{heroSlides[activeHero].label}</strong><em>{heroSlides[activeHero].detail}</em></span>
-              <span className="hero-slide-controls">
-                <button type="button" onClick={() => setActiveHero((current) => (current - 1 + heroSlides.length) % heroSlides.length)} aria-label="Previous equipment image"><ChevronLeft size={18} /></button>
-                <button type="button" onClick={() => setActiveHero((current) => (current + 1) % heroSlides.length)} aria-label="Next equipment image"><ChevronRight size={18} /></button>
-              </span>
-            </figcaption>
-          </figure>
+          <div className="hero-frame-meta" aria-hidden="true"><span>GMS / 2026</span><span>Scroll to explore</span></div>
         </div>
       </section>
 
-      <section className="trust-strip" aria-label="Gordon services at a glance">
+      <section className="trust-strip capability-rail" aria-label="Gordon services at a glance">
         <div className="container trust-grid" data-reveal>
-          {trustItems.map(({ icon: Icon, title, copy }) => (
+          <div className="trust-intro"><span>What we do</span><strong>Built around the job.</strong></div>
+          {trustItems.map(({ title, copy }, index) => (
             <div className="trust-item" key={title}>
-              <span className="trust-icon"><Icon size={21} strokeWidth={1.8} aria-hidden="true" /></span>
+              <span className="trust-number">0{index + 1}</span>
               <div><strong>{title}</strong><span>{copy}</span></div>
             </div>
           ))}
@@ -327,8 +257,8 @@ export default function Home() {
           </div>
 
           <div className="inventory-grid" data-reveal>
-            {homeInventory.map((item) => (
-              <a className="equipment-card" href={item.href} key={item.title}>
+            {homeInventory.map((item, index) => (
+              <a className={`equipment-card ${index === 0 ? 'equipment-card-featured' : ''}`} href={item.href} key={item.title}>
                 <div className="card-image"><img src={item.image} alt={item.alt} loading="lazy" /></div>
                 <div className="card-body">
                   <span className="category-label">{item.category}</span>
@@ -348,9 +278,9 @@ export default function Home() {
               <p>Find the right machine for your next project.</p>
             </div>
             <div className="category-grid">
-              {categories.map(({ label, filter, icon: Icon }) => (
+              {categories.map(({ label, filter }, index) => (
                 <a href={filter ? `/equipment?category=${encodeURIComponent(filter)}` : '/equipment'} className="category-tile" key={label}>
-                  <span className="category-icon"><Icon size={24} strokeWidth={1.6} aria-hidden="true" /></span>
+                  <span className="category-index">0{index + 1}</span>
                   <span>{label}</span>
                   <ArrowRight className="category-arrow" size={17} aria-hidden="true" />
                 </a>

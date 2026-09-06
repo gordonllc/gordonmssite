@@ -4,11 +4,9 @@ import { HardHat, Menu, Phone, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
-  { label: 'Home', href: '/', key: 'home' },
-  { label: 'About', href: '/#about', key: 'about' },
   { label: 'Inventory', href: '/equipment', key: 'inventory' },
   { label: 'Rentals', href: '/#rentals', key: 'rentals' },
-  { label: 'Financing', href: '/#financing', key: 'financing' },
+  { label: 'About', href: '/#about', key: 'about' },
   { label: 'Contact', href: '/#contact', key: 'contact' },
 ];
 
@@ -47,7 +45,7 @@ export function SiteHeader({ active = '' }: { active?: string }) {
               <Phone size={17} strokeWidth={2} aria-hidden="true" />
               <span>770-769-5281</span>
             </a>
-            <a className="button button-small" href="/#contact">Request a Quote</a>
+            <a className="button button-small" href="/#contact">Request Equipment</a>
           </div>
           <button
             className="menu-button"
