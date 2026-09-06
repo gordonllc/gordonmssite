@@ -61,6 +61,27 @@ const categories = [
   { label: 'Other Equipment', filter: '' },
 ];
 
+const buyingSteps = [
+  {
+    title: 'Start with the machine',
+    copy: 'Review the public listing for year, hours, price and current availability before you make contact.',
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558550679017-LPQLUQSFABJQDADHGKL8/cat.jpeg?format=2000w',
+    alt: 'CAT excavator in the Gordon Machinery Solutions equipment yard',
+  },
+  {
+    title: 'Get the details',
+    copy: 'Call the equipment desk or send an inquiry for current status, additional photos and straightforward answers.',
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1699020594540-9RPIF3KW0DD7H754MNY6/img+7.jpeg?format=2000w',
+    alt: 'Vermeer SC70TX stump grinder from Gordon Machinery Solutions',
+  },
+  {
+    title: 'Inspect and coordinate',
+    copy: 'Plan an inspection, pickup or transportation around the timing and requirements of your project.',
+    image: 'https://images.squarespace-cdn.com/content/v1/5983a2bbe45a7c8bbb2e5853/1558546181171-881IF7O9MBGS55ZESNNG/jcb3cxbackhoe.png?format=2000w',
+    alt: 'JCB backhoe loader available through Gordon Machinery Solutions',
+  },
+];
+
 const navItems = [
   { label: 'Inventory', href: '/equipment' },
   { label: 'Rentals', href: '/#rentals' },
@@ -82,18 +103,22 @@ function Logo() {
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [homeInventory, setHomeInventory] = useState(fallbackInventory);
+  const [inventoryCount, setInventoryCount] = useState(fallbackInventory.length);
+  const [activeBuyingStep, setActiveBuyingStep] = useState(0);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
   const [inquiryState, setInquiryState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [inquiryError, setInquiryError] = useState('');
   const [acknowledgementSent, setAcknowledgementSent] = useState(false);
 
   useEffect(() => {
     let active = true;
-    fetch('/api/equipment?featured=1&limit=3')
+    fetch('/api/equipment')
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((data) => {
         const { items } = data as { items: EquipmentItem[] };
         if (!active || !Array.isArray(items) || !items.length) return;
-        setHomeInventory(items.map((item) => ({
+        setInventoryCount(items.length);
+        setHomeInventory(items.slice(0, 3).map((item) => ({
           category: String(item.category).toUpperCase(),
           title: item.title,
           details: item.hours ? `${Number(item.hours).toLocaleString()} hours` : item.availability,
@@ -105,6 +130,13 @@ export default function Home() {
       })
       .catch(() => undefined);
     return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    const updateHeader = () => setHeaderScrolled(window.scrollY > 72);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    return () => window.removeEventListener('scroll', updateHeader);
   }, []);
 
   useEffect(() => {
@@ -121,6 +153,18 @@ export default function Home() {
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const steps = Array.from(document.querySelectorAll<HTMLElement>('.buying-step'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        setActiveBuyingStep(Number((entry.target as HTMLElement).dataset.step || 0));
+      });
+    }, { rootMargin: '-34% 0px -42% 0px', threshold: 0.05 });
+    steps.forEach((step) => observer.observe(step));
     return () => observer.disconnect();
   }, []);
 
@@ -161,7 +205,7 @@ export default function Home() {
 
   return (
     <main>
-      <header className="site-header home-site-header">
+      <header className={`site-header home-site-header ${headerScrolled ? 'is-scrolled' : ''}`}>
         <div className="container header-inner">
           <a href="/" aria-label="Gordon Machinery Solutions home"><Logo /></a>
 
@@ -227,6 +271,11 @@ export default function Home() {
               <span>Nationwide sourcing</span>
             </p>
           </div>
+          <aside className="hero-operational" aria-label="Gordon Machinery Solutions operating details">
+            <div><span>Public inventory</span><strong>{inventoryCount} current {inventoryCount === 1 ? 'listing' : 'listings'}</strong></div>
+            <div><span>Equipment desk</span><a href="tel:+17707695281">770-769-5281</a></div>
+            <div><span>Office</span><strong>Smyrna, Georgia</strong></div>
+          </aside>
           <div className="hero-frame-meta" aria-hidden="true"><span>GMS / 2026</span><span>Scroll to explore</span></div>
         </div>
       </section>
@@ -285,6 +334,44 @@ export default function Home() {
                   <ArrowRight className="category-arrow" size={17} aria-hidden="true" />
                 </a>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="buying-process" aria-labelledby="buying-process-title">
+        <div className="container buying-process-grid">
+          <div className="buying-visual" data-reveal>
+            <div className="buying-image-stack">
+              {buyingSteps.map((step, index) => (
+                <img
+                  className={activeBuyingStep === index ? 'is-active' : ''}
+                  src={step.image}
+                  alt={step.alt}
+                  loading="lazy"
+                  key={step.title}
+                />
+              ))}
+            </div>
+            <div className="buying-visual-caption"><span>0{activeBuyingStep + 1}</span><strong>{buyingSteps[activeBuyingStep].title}</strong></div>
+          </div>
+          <div className="buying-copy">
+            <div className="buying-intro" data-reveal>
+              <p className="eyebrow">From Listing to Jobsite</p>
+              <h2 id="buying-process-title">A clear path to the right machine.</h2>
+              <p>The important details stay visible, and there is always a direct way to ask what the listing cannot answer.</p>
+            </div>
+            <div className="buying-steps">
+              {buyingSteps.map((step, index) => (
+                <article className={`buying-step ${activeBuyingStep === index ? 'is-active' : ''}`} data-step={index} key={step.title}>
+                  <span>0{index + 1}</span>
+                  <div><h3>{step.title}</h3><p>{step.copy}</p></div>
+                </article>
+              ))}
+            </div>
+            <div className="buying-direct" data-reveal>
+              <span>Prefer to talk it through?</span>
+              <a href="tel:+17707695281">Call 770-769-5281 <ArrowRight size={16} aria-hidden="true" /></a>
             </div>
           </div>
         </div>
