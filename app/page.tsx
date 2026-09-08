@@ -84,7 +84,8 @@ const buyingSteps = [
 
 const navItems = [
   { label: 'Inventory', href: '/equipment' },
-  { label: 'Rentals', href: '/#rentals' },
+  { label: 'Rentals', href: '/rentals' },
+  { label: 'Financing', href: '/financing' },
   { label: 'About', href: '/#about' },
   { label: 'Contact', href: '/#contact' },
 ];
@@ -438,8 +439,8 @@ export default function Home() {
               <li><Check size={18} aria-hidden="true" /> Long-term rental</li>
               <li><Check size={18} aria-hidden="true" /> Rental purchase options</li>
             </ul>
-            <a className="button" href="/equipment?availability=Rental%20Available">
-              View Rentals <ArrowRight size={17} aria-hidden="true" />
+            <a className="button" href="/rentals">
+              Explore Rentals <ArrowRight size={17} aria-hidden="true" />
             </a>
           </div>
         </div>
@@ -467,8 +468,8 @@ export default function Home() {
               <p>Ask about financing options available for qualifying equipment purchases, including transportation costs.</p>
             </div>
           </div>
-          <a className="text-link" href="#contact">
-            Ask About Financing <ArrowRight size={17} aria-hidden="true" />
+          <a className="text-link" href="/financing">
+            View Financing Options <ArrowRight size={17} aria-hidden="true" />
           </a>
         </div>
       </section>
@@ -484,6 +485,15 @@ export default function Home() {
               <a href="mailto:Sales@GordonMachinerySolutions.com"><span><Mail size={19} aria-hidden="true" /></span><div><small>EMAIL</small><strong>Sales@GordonMachinerySolutions.com</strong></div></a>
               <div><span><MapPin size={19} aria-hidden="true" /></span><div><small>OFFICE</small><strong>2400 Herodian Way SE, Ste 220<br />Smyrna, GA 30080</strong></div></div>
               <div><span><Clock3 size={19} aria-hidden="true" /></span><div><small>AVAILABILITY</small><strong>Call to speak with our team</strong></div></div>
+            </div>
+            <div className="contact-team">
+              <p className="contact-team-label">Who to contact</p>
+              <div className="contact-team-grid">
+                <span><small>MANAGER</small><strong>Darnell Wallace</strong></span>
+                <span><small>SALES</small><strong>Kenneth Jones</strong></span>
+                <span><small>RENTALS</small><strong>Steve Dean</strong></span>
+                <span><small>TECHNICIAN</small><strong>Richard Gordon</strong></span>
+              </div>
             </div>
           </div>
 
@@ -536,12 +546,12 @@ export default function Home() {
             <h3>Company</h3>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
-            <a href="#financing">Financing</a>
+            <a href="/financing">Financing</a>
           </div>
           <div>
             <h3>Equipment</h3>
             <a href="/equipment">Inventory</a>
-            <a href="#rentals">Rentals</a>
+            <a href="/rentals">Rentals</a>
             <a href="#contact">Equipment Sourcing</a>
           </div>
           <div>

@@ -135,8 +135,8 @@ export function parseInquiryInput(value: unknown): InquiryInput & { website: str
   const input = value && typeof value === 'object' ? value as Record<string, unknown> : {};
   const email = requiredText(input.email, 'email', 180).toLowerCase();
   if (!/^\S+@\S+\.\S+$/.test(email)) throw new Error('Enter a valid email address.');
-  const phone = requiredText(input.phone, 'phone number', 40);
-  if (!/[0-9]{7}/.test(phone.replace(/\D/g, ''))) throw new Error('Enter a valid phone number.');
+  const phone = optionalText(input.phone, 40);
+  if (phone && !/[0-9]{7}/.test(phone.replace(/\D/g, ''))) throw new Error('Enter a valid phone number.');
 
   return {
     name: requiredText(input.name, 'name', 120),

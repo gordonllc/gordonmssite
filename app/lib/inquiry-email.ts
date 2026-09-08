@@ -86,7 +86,7 @@ function staffEmailHtml(inquiry: Inquiry, adminUrl: string) {
     <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5">
       <tr><td style="width:110px;padding:7px 0;color:#777">Name</td><td style="padding:7px 0;font-weight:700">${escapeHtml(inquiry.name)}</td></tr>
       ${inquiry.company ? `<tr><td style="padding:7px 0;color:#777">Company</td><td style="padding:7px 0;font-weight:700">${escapeHtml(inquiry.company)}</td></tr>` : ''}
-      <tr><td style="padding:7px 0;color:#777">Phone</td><td style="padding:7px 0;font-weight:700"><a style="color:#171a1b" href="tel:${escapeAttribute(inquiry.phone)}">${escapeHtml(inquiry.phone)}</a></td></tr>
+      <tr><td style="padding:7px 0;color:#777">Phone</td><td style="padding:7px 0;font-weight:700">${inquiry.phone ? `<a style="color:#171a1b" href="tel:${escapeAttribute(inquiry.phone)}">${escapeHtml(inquiry.phone)}</a>` : 'Not provided'}</td></tr>
       <tr><td style="padding:7px 0;color:#777">Email</td><td style="padding:7px 0;font-weight:700"><a style="color:#171a1b" href="mailto:${escapeAttribute(inquiry.email)}">${escapeHtml(inquiry.email)}</a></td></tr>
       <tr><td style="padding:7px 0;color:#777">Interest</td><td style="padding:7px 0;font-weight:700">${escapeHtml(inquiry.interest)}</td></tr>
       ${machineLine}
@@ -120,7 +120,7 @@ function staffEmailText(inquiry: Inquiry, adminUrl: string) {
     '',
     `Name: ${inquiry.name}`,
     inquiry.company ? `Company: ${inquiry.company}` : '',
-    `Phone: ${inquiry.phone}`,
+    `Phone: ${inquiry.phone || 'Not provided'}`,
     `Email: ${inquiry.email}`,
     `Interest: ${inquiry.interest}`,
     inquiry.equipmentTitle ? `Machine: ${inquiry.equipmentTitle}` : '',

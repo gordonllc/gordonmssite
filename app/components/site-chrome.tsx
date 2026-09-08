@@ -5,7 +5,8 @@ import { useState } from 'react';
 
 const navItems = [
   { label: 'Inventory', href: '/equipment', key: 'inventory' },
-  { label: 'Rentals', href: '/#rentals', key: 'rentals' },
+  { label: 'Rentals', href: '/rentals', key: 'rentals' },
+  { label: 'Financing', href: '/financing', key: 'financing' },
   { label: 'About', href: '/#about', key: 'about' },
   { label: 'Contact', href: '/#contact', key: 'contact' },
 ];
@@ -84,12 +85,12 @@ export function SiteFooter() {
             <h3>Company</h3>
             <a href="/#about">About</a>
             <a href="/#contact">Contact</a>
-            <a href="/#financing">Financing</a>
+            <a href="/financing">Financing</a>
           </div>
           <div>
             <h3>Equipment</h3>
             <a href="/equipment">Inventory</a>
-            <a href="/#rentals">Rentals</a>
+            <a href="/rentals">Rentals</a>
             <a href="/#contact">Equipment Sourcing</a>
           </div>
           <div>
