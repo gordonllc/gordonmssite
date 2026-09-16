@@ -1,4 +1,5 @@
-import { env } from 'cloudflare:workers';
+import { database } from './connect';
+import { initializeDatabase } from './bootstrap';
 
 export type InquiryStatus = 'New' | 'Contacted' | 'Closed';
 
@@ -36,41 +37,8 @@ type InquiryRow = {
 
 export type InquiryInput = Omit<Inquiry, 'id' | 'status' | 'createdAt' | 'updatedAt'>;
 
-let initialization: Promise<void> | null = null;
-
-function database() {
-  if (!env.DB) throw new Error('Inquiry database is unavailable.');
-  return env.DB;
-}
-
 export async function initializeInquiries() {
-  if (initialization) return initialization;
-  initialization = (async () => {
-    const db = database();
-    await db.prepare(`
-      CREATE TABLE IF NOT EXISTS inquiries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        company TEXT,
-        phone TEXT NOT NULL,
-        email TEXT NOT NULL,
-        interest TEXT NOT NULL,
-        equipment_slug TEXT,
-        equipment_title TEXT,
-        message TEXT NOT NULL,
-        source_page TEXT NOT NULL DEFAULT '/',
-        status TEXT NOT NULL DEFAULT 'New',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-      )
-    `).run();
-    await db.prepare('CREATE INDEX IF NOT EXISTS idx_inquiries_status_created ON inquiries (status, created_at)').run();
-    await db.prepare('PRAGMA optimize').run();
-  })().catch((error) => {
-    initialization = null;
-    throw error;
-  });
-  return initialization;
+  return initializeDatabase();
 }
 
 export async function createInquiry(input: InquiryInput): Promise<Inquiry> {
@@ -91,7 +59,7 @@ export async function createInquiry(input: InquiryInput): Promise<Inquiry> {
     INSERT INTO inquiries (
       name, company, phone, email, interest, equipment_slug, equipment_title,
       message, source_page, status, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'New', ?, ?) RETURNING id
   `).bind(
     input.name,
     input.company,
@@ -104,8 +72,8 @@ export async function createInquiry(input: InquiryInput): Promise<Inquiry> {
     input.sourcePage,
     now,
     now,
-  ).run();
-  const id = Number(result.meta.last_row_id);
+  ).first<{ id: number }>();
+  const id = Number(result?.id);
   const created = await getInquiry(id);
   if (!created) throw new Error('The inquiry could not be saved.');
   return created;

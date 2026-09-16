@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Archivo, IBM_Plex_Mono, Inter } from 'next/font/google';
 import './globals.css';
+import { siteUrl } from './lib/site-url';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -19,7 +20,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://gordon-machinery-solutions.nikol777.chatgpt.site'),
+  metadataBase: new URL(siteUrl()),
   title: 'Gordon Machinery Solutions | Heavy Equipment Sales & Rentals',
   description:
     'Quality used construction equipment, flexible rentals, and equipment sourcing for contractors throughout Atlanta and beyond.',

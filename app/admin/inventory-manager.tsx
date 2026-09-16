@@ -47,12 +47,10 @@ export default function InventoryManager({
   initialItems,
   initialInquiries,
   userName,
-  signOutHref,
 }: {
   initialItems: EquipmentItem[];
   initialInquiries: Inquiry[];
   userName: string;
-  signOutHref: string;
 }) {
   const [activeView, setActiveView] = useState<'equipment' | 'inquiries'>('equipment');
   const [items, setItems] = useState(initialItems);
@@ -147,7 +145,11 @@ export default function InventoryManager({
     <main className="admin-shell">
       <header className="admin-header">
         <a className="admin-brand" href="/"><span>G</span><div><strong>Gordon Machinery</strong><small>Sales Operations</small></div></a>
-        <div className="admin-account"><span>{userName}</span><a href={signOutHref}><LogOut size={16} /> Sign out</a></div>
+        <div className="admin-account"><span>{userName}</span><button type="button" onClick={async () => {
+          const response = await fetch('/api/admin/logout', { method: 'POST' });
+          if (response.ok) window.location.assign('/admin/login');
+          else window.alert('Could not sign out. Please try again.');
+        }}><LogOut size={16} /> Sign out</button></div>
       </header>
 
       <div className="admin-main">

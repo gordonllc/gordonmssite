@@ -111,7 +111,7 @@ export default function Home() {
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((data) => {
         const { items } = data as { items: EquipmentItem[] };
-        if (!active || !Array.isArray(items) || !items.length) return;
+        if (!active || !Array.isArray(items)) return;
         setInventoryCount(items.length);
         setHomeInventory(items.slice(0, 3).map((item) => ({
           category: String(item.category).toUpperCase(),

@@ -1,17 +1,16 @@
-import { env } from 'cloudflare:workers';
+import { siteUrl } from './site-url';
 import type { Inquiry } from '../../db/inquiries';
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const SITE_URL = 'https://gordon-machinery-solutions.nikol777.chatgpt.site';
 
 export async function runInquiryEmailAutomation(inquiry: Inquiry) {
-  const apiKey = env.RESEND_API_KEY?.trim();
-  const from = env.INQUIRY_FROM_EMAIL?.trim();
-  const salesEmail = env.SALES_NOTIFICATION_EMAIL?.trim() || 'Sales@GordonMachinerySolutions.com';
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+  const from = process.env.INQUIRY_FROM_EMAIL?.trim();
+  const salesEmail = process.env.SALES_NOTIFICATION_EMAIL?.trim() || 'Sales@GordonMachinerySolutions.com';
   if (!apiKey || !from) return { configured: false, staffSent: false, customerSent: false };
 
   const equipment = inquiry.equipmentTitle || inquiry.interest;
-  const adminUrl = `${SITE_URL}/admin`;
+  const adminUrl = `${siteUrl()}/admin`;
   const staffSubject = `New website inquiry — ${equipment}`;
   const customerSubject = `We received your Gordon Machinery request`;
 
@@ -22,7 +21,7 @@ export async function runInquiryEmailAutomation(inquiry: Inquiry) {
       to: salesEmail,
       replyTo: inquiry.email,
       subject: staffSubject,
-      idempotencyKey: `gordon-inquiry-${inquiry.id}-staff-v1`,
+      idempotencyKey: `gordon-${inquiry.id}-${inquiry.createdAt}-staff-v2`,
       html: staffEmailHtml(inquiry, adminUrl),
       text: staffEmailText(inquiry, adminUrl),
     }),
@@ -32,7 +31,7 @@ export async function runInquiryEmailAutomation(inquiry: Inquiry) {
       to: inquiry.email,
       replyTo: salesEmail,
       subject: customerSubject,
-      idempotencyKey: `gordon-inquiry-${inquiry.id}-customer-v1`,
+      idempotencyKey: `gordon-${inquiry.id}-${inquiry.createdAt}-customer-v2`,
       html: customerEmailHtml(inquiry),
       text: customerEmailText(inquiry),
     }),
@@ -65,6 +64,7 @@ async function sendEmail({
   idempotencyKey: string;
 }) {
   const response = await fetch(RESEND_ENDPOINT, {
+    signal: AbortSignal.timeout(10_000),
     method: 'POST',
     headers: {
       Authorization: `Bearer ${apiKey}`,

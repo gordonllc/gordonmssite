@@ -1,9 +1,9 @@
-import { getChatGPTUser } from '../chatgpt-auth';
-import { isAdminEmail } from '../../db/equipment';
+import { getAdminUser } from './auth';
+import { sameOrigin } from './request';
 
-export async function authorizeAdminRequest() {
-  const user = await getChatGPTUser();
+export async function authorizeAdminRequest(request: Request) {
+  if (!sameOrigin(request)) return { error: Response.json({ error: 'Request origin is not allowed.' }, { status: 403 }) };
+  const user = await getAdminUser();
   if (!user) return { error: Response.json({ error: 'Sign in is required.' }, { status: 401 }) };
-  if (!isAdminEmail(user.email)) return { error: Response.json({ error: 'You do not have access to Gordon site management.' }, { status: 403 }) };
   return { user };
 }

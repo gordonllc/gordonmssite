@@ -9,6 +9,10 @@ export async function GET(request: Request) {
   const limit = Number.isInteger(requestedLimit) && requestedLimit > 0
     ? Math.min(requestedLimit, 24)
     : undefined;
-  const items = await listEquipment({ featuredOnly, limit });
-  return Response.json({ items }, { headers: { 'Cache-Control': 'no-store' } });
+  try {
+    const items = await listEquipment({ featuredOnly, limit });
+    return Response.json({ items }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch {
+    return Response.json({ error: 'Inventory is temporarily unavailable. Please contact Gordon for availability.' }, { status: 503 });
+  }
 }

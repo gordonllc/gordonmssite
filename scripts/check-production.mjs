@@ -1,0 +1,10 @@
+import { loadEnvConfig } from '@next/env';
+loadEnvConfig(process.cwd());
+const required = ['DATABASE_URL', 'ADMIN_EMAIL', 'ADMIN_PASSWORD_HASH', 'SESSION_SECRET', 'APP_URL', 'REPLIT_STORAGE_BUCKET_ID'];
+const missing = required.filter((key) => !process.env[key]?.trim());
+if (missing.length) throw new Error(`Add these Replit Secrets before publishing: ${missing.join(', ')}`);
+if (process.env.SESSION_SECRET.length < 32) throw new Error('SESSION_SECRET must contain at least 32 characters.');
+if (!/^scrypt:[a-f0-9]{32}:[a-f0-9]{128}$/.test(process.env.ADMIN_PASSWORD_HASH)) throw new Error('Generate ADMIN_PASSWORD_HASH with npm run admin:setup.');
+const url = new URL(process.env.APP_URL);
+if (url.protocol !== 'https:' || url.username || url.password) throw new Error('APP_URL must be your public HTTPS website URL.');
+if (!process.env.RESEND_API_KEY || !process.env.INQUIRY_FROM_EMAIL) console.warn('Inquiry emails are not enabled yet. Requests will still be saved.');
