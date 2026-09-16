@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import type { EquipmentItem } from './data/equipment';
+import { GordonLogo } from './components/site-chrome';
 
 const trustItems = [
   { title: 'Used Equipment', copy: 'Excavators, backhoes, grinders and more' },
@@ -91,14 +92,7 @@ const navItems = [
 ];
 
 function Logo() {
-  return (
-    <span className="brand">
-      <img
-        src="/gordon-machinery-logo.png"
-        alt="Gordon Machinery Solutions"
-      />
-    </span>
-  );
+  return <GordonLogo />;
 }
 
 export default function Home() {
@@ -270,8 +264,8 @@ export default function Home() {
             <p className="eyebrow">Atlanta, Georgia / Sales · Rentals · Sourcing</p>
             <h1>Heavy equipment for the work ahead.</h1>
             <p className="hero-lede">
-              Used construction equipment, flexible rentals and hands-on sourcing for
-              contractors who need a straight answer and the right machine.
+              Used construction equipment, flexible rentals and sourcing for
+              contractors throughout Atlanta and beyond.
             </p>
             <div className="hero-buttons">
               <a className="button" href="/equipment">View Inventory</a>
@@ -371,7 +365,7 @@ export default function Home() {
             <div className="buying-intro" data-reveal>
               <p className="eyebrow">From Listing to Jobsite</p>
               <h2 id="buying-process-title">A clear path to the right machine.</h2>
-              <p>The important details stay visible, and there is always a direct way to ask what the listing cannot answer.</p>
+              <p>Review the equipment, speak with our team, and coordinate an inspection around your project.</p>
             </div>
             <div className="buying-steps">
               {buyingSteps.map((step, index) => (
@@ -400,7 +394,7 @@ export default function Home() {
           </figure>
           <div className="about-copy" data-reveal>
             <p className="eyebrow">About Gordon</p>
-            <h2>Equipment Sales, Rentals and Sourcing in Atlanta</h2>
+            <h2>Sales, rentals and sourcing from Atlanta.</h2>
             <p>
               Gordon Machinery Solutions is a value-driven used equipment dealer serving
               contractors and construction businesses throughout the Atlanta area.
@@ -432,7 +426,7 @@ export default function Home() {
           </figure>
           <div className="rentals-copy" data-reveal>
             <p className="eyebrow">Equipment Rentals</p>
-            <h2>Short- and Long-Term Equipment Rentals</h2>
+            <h2>A rental term that fits the job.</h2>
             <p>Short-term, long-term and rental-purchase options are available for qualifying equipment.</p>
             <ul>
               <li><Check size={18} aria-hidden="true" /> Short-term rental</li>

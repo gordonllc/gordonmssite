@@ -1,7 +1,7 @@
 'use client';
 
 import { HardHat, Menu, Phone, X } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState, type CSSProperties } from 'react';
 
 const navItems = [
   { label: 'Inventory', href: '/equipment', key: 'inventory' },
@@ -12,8 +12,21 @@ const navItems = [
 ];
 
 export function GordonLogo() {
+  const filterId = `gordon-dark-${useId().replace(/:/g, '')}`;
   return (
-    <span className="brand">
+    <span className="brand" style={{ '--logo-dark-filter': `url(#${filterId})` } as CSSProperties}>
+      <svg className="logo-treatment" aria-hidden="true" focusable="false" width="0" height="0">
+        <defs>
+          <filter id={filterId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -.2126 -.7152 -.0722 0 1" result="inverseLuminance" />
+            <feComponentTransfer in="inverseLuminance" result="darkPixels"><feFuncA type="discrete" tableValues="0 0 0 0 0 0 0 0 1 1" /></feComponentTransfer>
+            <feComposite in="darkPixels" in2="SourceAlpha" operator="in" result="darkMask" />
+            <feFlood floodColor="#f2f3f0" result="lightInk" />
+            <feComposite in="lightInk" in2="darkMask" operator="in" result="lightDetails" />
+            <feComposite in="lightDetails" in2="SourceGraphic" operator="over" />
+          </filter>
+        </defs>
+      </svg>
       <img
         src="/gordon-machinery-logo.png"
         alt="Gordon Machinery Solutions"
